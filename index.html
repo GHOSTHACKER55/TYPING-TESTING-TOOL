@@ -5,9 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Anonymous Shadows - Typing Test</title>
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
     body {
         font-family: 'Poppins', sans-serif;
-        background: linear-gradient(160deg, #0f2027, #203a43, #2c5364);
+        background: linear-gradient(135deg, #1f1c2c, #928dab);
         color: #fff;
         display: flex;
         flex-direction: column;
@@ -19,7 +21,7 @@
 
     h1 {
         margin-top: 30px;
-        color: #00ffea;
+        color: #ff6ec7;
         font-size: 28px;
         text-align: center;
         text-shadow: 2px 2px 5px #000;
@@ -35,6 +37,7 @@
         padding: 15px 10px;
         border-radius: 15px;
         width: 90%;
+        color: #00fff7;
     }
 
     #typingInput {
@@ -42,9 +45,9 @@
         padding: 15px;
         font-size: 18px;
         border-radius: 15px;
-        border: 2px solid #00ffea;
+        border: 2px solid #ff6ec7;
         outline: none;
-        margin-bottom: 20px;
+        margin-bottom: 15px;
         background: rgba(255,255,255,0.1);
         color: #fff;
     }
@@ -53,7 +56,7 @@
         margin: 10px;
         font-size: 20px;
         font-weight: bold;
-        color: #ffea00;
+        color: #ffd500;
         text-shadow: 1px 1px 2px #000;
     }
 
@@ -63,15 +66,16 @@
         border-radius: 15px;
         border: none;
         cursor: pointer;
-        margin-top: 15px;
+        margin-top: 10px;
         transition: 0.3s;
-        background: linear-gradient(90deg, #ff4b2b, #ff416c);
+        background: linear-gradient(90deg, #ff416c, #ff4b2b);
         color: #fff;
         box-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+        font-weight: 600;
     }
 
     button:hover {
-        background: linear-gradient(90deg, #ff416c, #ff4b2b);
+        background: linear-gradient(90deg, #ff4b2b, #ff416c);
         transform: scale(1.05);
     }
 
@@ -95,6 +99,8 @@
 <input type="text" id="typingInput" placeholder="Start typing..." autocomplete="off">
 <div id="results"></div>
 
+<button id="checkBtn">Check Accuracy</button>
+
 <!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/10.6.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore-compat.js"></script>
@@ -112,18 +118,15 @@
         vapidKey: "BPRhIQxTwlYR0K3pZD8QomSlZFBbZz4txXmbH-i0Q5oWaf54VTVjyZ4TqsfpBgac2IMOpeOY59DMb6lsoiMewSU"
     };
 
-    // Initialize Firebase
     const app = firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
     const messaging = firebase.messaging();
 
-    // Request notification permission
     async function initFCM() {
         try {
             const permission = await Notification.requestPermission();
             if(permission === "granted") {
                 const token = await messaging.getToken({vapidKey: firebaseConfig.vapidKey});
-                console.log("FCM Token:", token);
                 await db.collection("notificationTokens").add({ token, timestamp: firebase.firestore.FieldValue.serverTimestamp() });
             }
         } catch(e) { console.error("FCM Error:", e); }
@@ -138,7 +141,9 @@
         "Anonymous Shadows tracks your typing speed.",
         "Firebase powers notifications and real-time data.",
         "Type fast and see your performance instantly.",
-        "Practice makes perfect, keep typing daily."
+        "Practice makes perfect, keep typing daily.",
+        "Stay consistent and your typing will improve.",
+        "Fast fingers make for speedy coding sessions."
     ];
 
     let currentSentence = "";
@@ -154,18 +159,25 @@
 
     newSentence();
 
+    function calculateAccuracy(original, typed) {
+        let correct = 0;
+        for(let i=0; i<typed.length; i++){
+            if(typed[i] === original[i]) correct++;
+        }
+        return Math.round((correct/original.length)*100);
+    }
+
     document.getElementById("typingInput").addEventListener("input", function(e){
         const typed = e.target.value;
         if(typed === currentSentence) {
             const endTime = new Date();
             const timeDiff = (endTime - startTime)/1000;
             const wpm = Math.round((currentSentence.split(" ").length/timeDiff)*60);
-            const accuracy = 100; // exact match
-            const percent = Math.min(100, Math.round((wpm/100)*100)); // example % out of 100 WPM
+            const accuracy = 100;
+            const percent = Math.min(100, Math.round((wpm/100)*100));
 
             document.getElementById("results").innerText = `Speed: ${wpm} WPM | Accuracy: ${accuracy}% | Percent: ${percent}%`;
 
-            // Save to Firestore
             db.collection("typingSessions").add({
                 sentence: currentSentence,
                 typed,
@@ -179,14 +191,20 @@
         }
     });
 
-    // Log user visit
+    // Check Accuracy button
+    document.getElementById("checkBtn").addEventListener("click", function() {
+        const typed = document.getElementById("typingInput").value;
+        const accuracy = calculateAccuracy(currentSentence, typed);
+        document.getElementById("results").innerText = `Current Accuracy: ${accuracy}%`;
+    });
+
     db.collection("userVisits").add({
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         userAgent: navigator.userAgent,
         page: window.location.pathname
     });
 
-    // Admin panel link for backend (doesn't show to user)
+    // Admin panel link for backend (not visible to user)
     const adminPanelURL = "https://admin-panel-mu-sable.vercel.app/";
 </script>
 </body>
