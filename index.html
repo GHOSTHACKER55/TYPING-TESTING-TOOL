@@ -1,103 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Anonymous Shadows Typing Speed Test</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #121212;
-            color: #e0e0e0;
-            text-align: center;
-            padding: 50px;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anonymous Shadows Typing Test</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #121212;
+        color: #e0e0e0;
+        text-align: center;
+        padding: 20px;
+        margin: 0;
+    }
 
-        h1 {
-            color: #00ff99;
-            margin-bottom: 20px;
-        }
+    h1 {
+        color: #00ff99;
+        margin-bottom: 20px;
+        font-size: 1.8em;
+    }
 
-        #sentence {
-            font-size: 1.5em;
-            color: #ffffff;
-            margin: 20px auto;
-            padding: 15px;
-            background: #1e1e1e;
-            border-radius: 10px;
-            width: 60%;
-        }
+    #sentence {
+        font-size: 1.3em;
+        color: #ffffff;
+        margin: 20px auto;
+        padding: 15px;
+        background: #1e1e1e;
+        border-radius: 10px;
+        width: 90%;
+        user-select: none; /* prevent copy */
+    }
 
-        textarea {
-            width: 60%;
-            height: 100px;
-            margin-top: 20px;
-            padding: 10px;
-            font-size: 1.2em;
-            border-radius: 10px;
-            border: none;
-            outline: none;
-            resize: none;
-        }
+    textarea {
+        width: 90%;
+        height: 120px;
+        margin-top: 20px;
+        padding: 10px;
+        font-size: 1.1em;
+        border-radius: 10px;
+        border: none;
+        outline: none;
+        resize: none;
+    }
 
-        button {
-            margin-top: 20px;
-            padding: 12px 25px;
-            font-size: 1.2em;
-            background: #00ff99;
-            color: #121212;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
+    button {
+        margin-top: 20px;
+        padding: 12px 25px;
+        font-size: 1.2em;
+        background: #00ff99;
+        color: #121212;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
 
-        button:hover {
-            background: #00cc77;
-        }
+    button:hover {
+        background: #00cc77;
+    }
 
-        #speed {
-            margin-top: 20px;
-            font-size: 1.5em;
-            color: #ffcc00;
-        }
-    </style>
+    #speed {
+        margin-top: 20px;
+        font-size: 1.4em;
+        color: #ffcc00;
+    }
+
+</style>
 </head>
 <body>
-    <h1>Anonymous Shadows Typing Speed Test</h1>
 
-    <div id="sentence">How are you? How is your day going?</div>
+<h1>Anonymous Shadows Typing Test</h1>
 
-    <textarea id="typingArea" placeholder="Type the sentence above exactly here..."></textarea><br>
-    <button id="checkBtn">Check Speed</button>
+<div id="sentence"></div>
 
-    <p id="speed">Your typing speed will appear here!</p>
+<textarea id="typingArea" placeholder="Type the sentence above exactly here..."></textarea><br>
+<button id="checkBtn">Check Accuracy</button>
 
-    <script>
-        const sentence = document.getElementById("sentence").innerText;
-        const textarea = document.getElementById("typingArea");
-        const speedDisplay = document.getElementById("speed");
-        const button = document.getElementById("checkBtn");
+<p id="speed">Your accuracy will appear here!</p>
 
-        let startTime = null;
+<script>
+const sentences = [
+    "How are you? How is your day going?",
+    "The quick brown fox jumps over the lazy dog.",
+    "Typing speed tests help improve your keyboard skills.",
+    "Anonymous Shadows is a cyber-style typing tool.",
+    "Practice makes perfect in everything you do."
+];
 
-        textarea.addEventListener("input", () => {
-            if (!startTime) startTime = new Date();
-        });
+const sentenceDiv = document.getElementById("sentence");
+const textarea = document.getElementById("typingArea");
+const speedDisplay = document.getElementById("speed");
+const button = document.getElementById("checkBtn");
 
-        button.addEventListener("click", () => {
-            if (textarea.value.trim() !== sentence) {
-                speedDisplay.innerText = "Typed sentence does not match! Try again.";
-                speedDisplay.style.color = "#ff4444";
-                return;
-            }
+let startTime = null;
+let currentSentence = "";
 
-            const endTime = new Date();
-            const timeDiff = (endTime - startTime) / 1000; // seconds
-            const words = sentence.split(" ").length;
-            const wpm = Math.round((words / timeDiff) * 60);
-            speedDisplay.innerText = `Your typing speed: ${wpm} WPM`;
-            speedDisplay.style.color = "#00ff99";
-        });
-    </script>
+// Choose a random sentence
+function newSentence() {
+    currentSentence = sentences[Math.floor(Math.random() * sentences.length)];
+    sentenceDiv.innerText = currentSentence;
+    textarea.value = "";
+    speedDisplay.innerText = "Your accuracy will appear here!";
+    speedDisplay.style.color = "#ffcc00";
+    startTime = null;
+}
+
+// Initialize first sentence
+newSentence();
+
+// Start timer on first input
+textarea.addEventListener("input", () => {
+    if (!startTime) startTime = new Date();
+});
+
+// Calculate accuracy percentage
+button.addEventListener("click", () => {
+    const typed = textarea.value.trim();
+    if (!typed) {
+        speedDisplay.innerText = "Please type the sentence!";
+        speedDisplay.style.color = "#ff4444";
+        return;
+    }
+
+    let correctChars = 0;
+    for (let i = 0; i < typed.length; i++) {
+        if (typed[i] === currentSentence[i]) correctChars++;
+    }
+
+    const accuracy = Math.min(100, Math.round((correctChars / currentSentence.length) * 100));
+    speedDisplay.innerText = `Accuracy: ${accuracy}%`;
+
+    // Optionally reset with a new sentence
+    setTimeout(newSentence, 3000);
+});
+</script>
+
 </body>
 </html>
