@@ -17,7 +17,7 @@
     align-items: center;
     min-height: 100vh;
     background: #000;
-    color: #00ff00; /* foreground green text */
+    color: #00ff00;
   }
 
   canvas#matrix {
@@ -27,10 +27,28 @@
     z-index: 0;
   }
 
-  h1 {
-    margin: 20px 0;
-    color: #00ff00;
-    text-shadow: 0 0 8px #00ff00;
+  /* Top logo */
+  .top-logo img {
+    width: 100px;
+    height: 100px;
+    margin-top: 20px;
+    border-radius: 15px;
+    z-index: 1;
+    position: relative;
+  }
+
+  /* Dark neon green glowing title */
+  h1#title {
+    font-size: 48px;
+    color: #00aa00;
+    text-align: center;
+    text-shadow:
+        0 0 5px #00aa00,
+        0 0 10px #00aa00,
+        0 0 20px #00ff00,
+        0 0 40px #00ff00,
+        0 0 80px #00ff00;
+    margin: 20px 0 40px 0;
     z-index: 1;
     position: relative;
   }
@@ -39,24 +57,13 @@
     position: relative;
     z-index: 1;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     width: 95%;
     max-width: 600px;
     background: rgba(0,0,0,0.75);
     border-radius: 15px;
     padding: 20px;
     box-shadow: 0 0 20px #00ff00;
-  }
-
-  .logo-placeholder img {
-    width: 60px;
-    height: 60px;
-    border-radius: 10px;
-  }
-
-  .content {
-    flex-grow: 1;
-    margin-left: 15px;
   }
 
   .sentence {
@@ -116,13 +123,14 @@
 
 <canvas id="matrix"></canvas>
 
-<h1>Anonymous Shadows Typing Test</h1>
+<!-- Top logo -->
+<div class="top-logo">
+  <img src="https://i.supaimg.com/deaa2a84-9bbc-4269-8375-bb54a6c8e71e.jpg" alt="Logo">
+</div>
+
+<h1 id="title">Anonymous Shadows Typing Test</h1>
 
 <div class="container">
-  <div class="logo-placeholder">
-    <img src="https://i.supaimg.com/deaa2a84-9bbc-4269-8375-bb54a6c8e71e.jpg" alt="Logo">
-  </div>
-  <div class="content">
     <div class="sentence" id="sentence">Join our WhatsApp to unlock the tool!</div>
     <textarea id="input" rows="4" placeholder="Start typing here..." disabled></textarea>
     <br>
@@ -131,11 +139,10 @@
     <button id="whatsappChannel" onclick="unlockTool('channel')">Visit WhatsApp Channel</button>
     <div class="result" id="result"></div>
     <div class="locked-msg" id="lockedMsg">You must join WhatsApp before using the tool!</div>
-  </div>
 </div>
 
 <script>
-  // Red Matrix effect in background
+  // Red Matrix background
   const canvas = document.getElementById('matrix');
   const ctx = canvas.getContext('2d');
   canvas.width = window.innerWidth;
