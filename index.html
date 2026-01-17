@@ -7,7 +7,6 @@
 <!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
-    /* Body & Background */
     body {
         font-family: 'Share Tech Mono', monospace;
         background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
@@ -17,7 +16,6 @@
         margin: 0;
     }
 
-    /* Title */
     h1 {
         font-family: 'Orbitron', sans-serif;
         color: #00ffcc;
@@ -26,7 +24,6 @@
         text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc;
     }
 
-    /* Sentence Box */
     #sentence {
         font-size: 1.4em;
         color: #fffb00;
@@ -39,7 +36,6 @@
         box-shadow: 0 0 15px #fffb00;
     }
 
-    /* Typing Area */
     textarea {
         width: 90%;
         height: 120px;
@@ -55,7 +51,6 @@
         box-shadow: 0 0 10px #00ffcc inset;
     }
 
-    /* Button */
     button {
         margin-top: 20px;
         padding: 15px 30px;
@@ -75,13 +70,13 @@
         box-shadow: 0 0 25px #00ffcc, 0 0 35px #ff00ff;
     }
 
-    /* Accuracy Display */
-    #speed {
+    #results {
         margin-top: 25px;
         font-size: 1.5em;
         color: #fffb00;
         text-shadow: 0 0 8px #fffb00;
     }
+
 </style>
 </head>
 <body>
@@ -91,11 +86,28 @@
 <div id="sentence"></div>
 
 <textarea id="typingArea" placeholder="Type the sentence above exactly here..."></textarea><br>
-<button id="checkBtn">Check Accuracy</button>
+<button id="checkBtn">Check Accuracy & WPM</button>
 
-<p id="speed">Your accuracy will appear here!</p>
+<p id="results">Your results will appear here!</p>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.6.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore-compat.js"></script>
 
 <script>
+/* ---------------- FIREBASE CONFIG ---------------- */
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "anonymous-shadows.firebaseapp.com",
+  projectId: "anonymous-shadows",
+  storageBucket: "anonymous-shadows.appspot.com",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+/* ------------------------------------------------ */
+
 const sentences = [
     "How are you? How is your day going?",
     "The quick brown fox jumps over the lazy dog.",
@@ -103,24 +115,25 @@ const sentences = [
     "Anonymous Shadows is a cyber-style typing tool.",
     "Practice makes perfect in everything you do.",
     "Challenge yourself daily to become faster.",
-    "Keep typing and never give up on learning."
+    "Keep typing and never give up on learning.",
+    "Push yourself harder to become the best."
 ];
 
 const sentenceDiv = document.getElementById("sentence");
 const textarea = document.getElementById("typingArea");
-const speedDisplay = document.getElementById("speed");
+const results = document.getElementById("results");
 const button = document.getElementById("checkBtn");
 
 let startTime = null;
 let currentSentence = "";
 
-// Function to choose a random sentence
+// Choose a new random sentence
 function newSentence() {
     currentSentence = sentences[Math.floor(Math.random() * sentences.length)];
     sentenceDiv.innerText = currentSentence;
     textarea.value = "";
-    speedDisplay.innerText = "Your accuracy will appear here!";
-    speedDisplay.style.color = "#fffb00";
+    results.innerText = "Your results will appear here!";
+    results.style.color = "#fffb00";
     startTime = null;
 }
 
@@ -132,12 +145,12 @@ textarea.addEventListener("input", () => {
     if (!startTime) startTime = new Date();
 });
 
-// Calculate accuracy percentage
-button.addEventListener("click", () => {
+// Calculate accuracy and WPM
+button.addEventListener("click", async () => {
     const typed = textarea.value.trim();
     if (!typed) {
-        speedDisplay.innerText = "Please type the sentence!";
-        speedDisplay.style.color = "#ff4444";
+        results.innerText = "Please type the sentence!";
+        results.style.color = "#ff4444";
         return;
     }
 
@@ -147,12 +160,31 @@ button.addEventListener("click", () => {
     }
 
     const accuracy = Math.min(100, Math.round((correctChars / currentSentence.length) * 100));
-    speedDisplay.innerText = `Accuracy: ${accuracy}%`;
 
-    // Show next sentence after 3 seconds
+    // Calculate WPM
+    const endTime = new Date();
+    const timeMinutes = (endTime - startTime) / 60000; // convert ms to minutes
+    const wordCount = typed.split(" ").length;
+    const wpm = Math.round(wordCount / timeMinutes);
+
+    results.innerText = `Accuracy: ${accuracy}% | WPM: ${wpm}`;
+
+    // Save to Firestore
+    try {
+        await db.collection("typingResults").add({
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            accuracy: accuracy,
+            wpm: wpm,
+            sentence: currentSentence
+        });
+        console.log("Result saved to Firestore!");
+    } catch(e) {
+        console.error("Error saving result: ", e);
+    }
+
+    // Load new sentence after 3 seconds
     setTimeout(newSentence, 3000);
 });
 </script>
-
 </body>
 </html>
