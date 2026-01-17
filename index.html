@@ -80,7 +80,7 @@
 </div>
 
 <script>
-  // 🔑 Firebase Config - Replace with your own
+  // 🔑 Firebase Config - REPLACE with your Firebase Web App config
   const firebaseConfig = {
     apiKey: "YOUR_API_KEY",
     authDomain: "YOUR_PROJECT.firebaseapp.com",
@@ -93,11 +93,16 @@
   const messaging = firebase.messaging();
 
   // Request notification permission
-  Notification.requestPermission().then(permission=>{
-    if(permission==="granted"){
+  Notification.requestPermission().then(permission => {
+    if(permission === "granted"){
       messaging.getToken({vapidKey:"YOUR_VAPID_KEY"}).then(token=>{
-        db.collection("tokens").add({token:token, time: new Date()});
-      });
+        console.log("FCM Token:", token);
+        // Save token in Firestore
+        db.collection("tokens").add({
+          token: token,
+          time: new Date()
+        });
+      }).catch(err=>console.log("Error getting FCM token:", err));
     }
   });
 
@@ -111,7 +116,7 @@
     startTime=new Date().getTime();
     document.getElementById("input").focus();
 
-    // Track tool opened
+    // Track tool opened in Firestore
     db.collection("visits").add({
       date:new Date().toISOString().slice(0,10),
       time:new Date().toLocaleTimeString(),
@@ -147,6 +152,5 @@
     started=false;
   }
 </script>
-
 </body>
 </html>
