@@ -3,265 +3,175 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Anonymous Shadows Typing Test ⌨️🔥</title>
+<title>Anonymous Shadows Typing Tool ⌨️🔥</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
-/* Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Roboto:wght@400;700&family=Press+Start+2P&family=Comfortaa:wght@400;700&display=swap');
-
-/* Reset */
-body, html {
-    margin: 0;
-    padding: 0;
+  body {
+    margin:0;
+    padding:0;
     font-family: 'Roboto', sans-serif;
-    background-color: #0f0f0f;
-    color: #fff;
+    background: #0a0a0a;
     overflow: hidden;
-}
-
-/* Canvas for falling letters */
-#lettersCanvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 0;
-}
-
-/* Container */
-.container {
-    position: relative;
-    z-index: 1;
+    color: #fff;
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 100vh;
-    padding: 30px 15px;
-}
+  }
+  /* Background falling letters */
+  .letter {
+    position: absolute;
+    top: -20px;
+    color: red;
+    font-size: 20px;
+    font-weight: bold;
+    animation: fall 5s linear infinite;
+  }
+  @keyframes fall {
+    to {transform: translateY(100vh);}
+  }
 
-/* Logo placeholder */
-#logoPlaceholder {
-    width: 60px;
-    height: 60px;
-    background-color: #222;
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 15px;
-}
-
-/* Title */
-h1 {
-    font-family: 'Orbitron', sans-serif;
-    color: #00ffea;
-    font-size: 2rem;
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    gap: 15px;
-    text-shadow: 0 0 10px #00ffea;
-}
-
-/* Message */
-#joinMessage {
+  header {
+    width: 100%;
+    display:flex;
+    justify-content: center;
+    align-items:center;
+    padding: 20px;
+  }
+  #logo {
+    width:50px;
+    height:50px;
+    margin-right:15px;
+    background-color:#333; /* Replace with logo link */
+  }
+  h1 {
     font-family: 'Press Start 2P', cursive;
-    color: #ff4d6d;
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 1rem;
-    text-shadow: 0 0 5px #ff4d6d;
-}
+    font-size: 24px;
+    color: #00ff99;
+    margin:0;
+  }
 
-/* Sentence box */
-#sentenceBox {
-    font-family: 'Comfortaa', cursive;
-    font-size: 1.3rem;
-    color: #ff4d6d;
-    background: rgba(0,0,0,0.7);
-    padding: 20px 25px;
-    border-radius: 15px;
-    max-width: 95%;
-    margin-bottom: 15px;
-    user-select: none; /* prevent copy */
-    text-align: center;
-}
+  #sentenceBox {
+    font-size: 18px;
+    margin:20px;
+    padding:10px;
+    background:#111;
+    border-radius: 10px;
+    color:#ff5555;
+    user-select:none; /* non-copyable */
+  }
 
-/* Input box */
-#typingArea {
-    width: 95%;
-    max-width: 750px;
+  #typingArea {
+    width: 90%;
+    max-width: 600px;
     padding: 15px;
-    font-size: 1.2rem;
-    border-radius: 12px;
+    font-size: 18px;
+    border-radius: 10px;
     border: none;
-    outline: none;
-    background-color: #111;
-    color: #fff;
-    text-align: center;
-}
+    outline:none;
+    margin-bottom: 10px;
+    background: #222;
+    color:#fff;
+  }
 
-/* Stats */
-.stats {
-    margin-top: 15px;
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #ffeb3b;
-    text-shadow: 0 0 5px #ffeb3b;
-}
+  .button {
+    padding:15px;
+    margin:10px;
+    font-size: 18px;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:bold;
+    color:#fff;
+  }
 
-/* Buttons */
-.button {
-    margin-top: 20px;
-    padding: 18px 50px;
-    border-radius: 12px;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: bold;
-    color: #fff;
-    transition: 0.3s;
-    text-transform: uppercase;
-}
+  .button-green {background-color:#25D366;}
+  .button-blue {background-color:#0099ff;}
+  .button-gradient {background: linear-gradient(45deg,#ff6b6b,#ffcc00,#00ff99);}
 
-/* WhatsApp Group button */
-#whatsappGroup {
-    background: linear-gradient(45deg, #25D366, #1ebe5b, #00ff99);
-    margin-right: 15px;
-}
+  #stats, #finalResult {
+    font-size:18px;
+    margin-top:10px;
+    color:#fff;
+  }
 
-/* WhatsApp Channel button */
-#whatsappChannel {
-    background: linear-gradient(45deg, #128C7E, #0fa48f, #00cccc);
-}
-
-/* Responsive */
-@media(max-width: 600px){
-    h1 { font-size: 1.5rem; }
-    #sentenceBox { font-size: 1rem; padding: 15px; }
-    #typingArea { font-size: 1rem; padding: 12px; }
-    .button { padding: 15px 35px; font-size: 0.9rem; }
-}
 </style>
 </head>
 <body>
-<canvas id="lettersCanvas"></canvas>
 
-<div class="container">
-    <h1>
-        <div id="logoPlaceholder"></div>
-        Anonymous Shadows Typing Test ⌨️🔥
-    </h1>
+<header>
+  <div id="logo"></div>
+  <h1>Anonymous Shadows Typing Test ⌨️🔥</h1>
+</header>
 
-    <div id="joinMessage">⚠️ You must join WhatsApp Group & Channel to start typing! ⚠️</div>
+<div id="sentenceBox"></div>
 
-    <div id="sentenceBox"></div>
-    <input type="text" id="typingArea" placeholder="Type here..." autocomplete="off">
+<textarea id="typingArea" placeholder="Type the sentence here..." rows="3"></textarea>
 
-    <div class="stats" id="accuracy">Accuracy: 0%</div>
-    <div class="stats" id="wpm">Speed: 0 WPM</div>
+<button class="button button-gradient" id="checkSpeed">Check Typing Speed 🏎️</button>
 
-    <div>
-        <button class="button" id="whatsappGroup">Join WhatsApp Group ✅</button>
-        <button class="button" id="whatsappChannel">Join WhatsApp Channel ✅</button>
-    </div>
-</div>
+<div id="finalResult"></div>
+
+<!-- WhatsApp Join Buttons -->
+<a href="https://whatsapp.com/channel/0029Vb6EE3S0LKZMNhNcoW22" target="_blank" class="button button-green">Join WhatsApp Channel ✅</a>
+<a href="https://chat.whatsapp.com/HVM9Spvm7HVGLERj8yo9kS" target="_blank" class="button button-blue">Join WhatsApp Group ✅</a>
 
 <script>
-// ----- Background Falling Letters -----
-const canvas = document.getElementById("lettersCanvas");
-const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+  // Falling letters background
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  for(let i=0;i<50;i++){
+    const span = document.createElement('span');
+    span.className='letter';
+    span.style.left=Math.random()*100+'vw';
+    span.style.fontSize=(15+Math.random()*20)+'px';
+    span.innerText = letters.charAt(Math.floor(Math.random()*letters.length));
+    document.body.appendChild(span);
+  }
 
-const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-const fontSize = 22;
-const columns = Math.floor(canvas.width / fontSize);
-const drops = Array(columns).fill(1);
-
-function draw() {
-    ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#ff0000";
-    ctx.font = fontSize + "px monospace";
-
-    for(let i=0; i<drops.length; i++){
-        const text = letters.charAt(Math.floor(Math.random()*letters.length));
-        ctx.fillText(text, i*fontSize, drops[i]*fontSize);
-        if(drops[i]*fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-        drops[i]++;
-    }
-}
-setInterval(draw, 50);
-window.addEventListener('resize', ()=>{canvas.width=window.innerWidth; canvas.height=window.innerHeight;});
-
-// ----- Sentences -----
-const sentences = [
+  const sentences = [
     "How are you doing today?",
-    "The quick brown fox jumps over the lazy dog.",
-    "Typing fast is fun and exciting!",
-    "Anonymous Shadows is the best typing test.",
-    "Practice makes perfect, keep typing!",
-    "Never give up on learning new skills.",
-    "Consistency is key for improvement.",
-    "Challenge yourself every single day.",
-    "Focus and concentration improve speed.",
-    "Mistakes happen, but accuracy matters."
-];
+    "Typing fast is fun!",
+    "Practice makes perfect.",
+    "Anonymous Shadows tool is amazing.",
+    "Focus and improve your speed.",
+    "Accuracy is key in typing.",
+    "Never give up learning new skills.",
+    "Keep calm and type faster!"
+  ];
 
-let currentSentence = sentences[Math.floor(Math.random()*sentences.length)];
-const sentenceBox = document.getElementById("sentenceBox");
-const typingArea = document.getElementById("typingArea");
-const accuracyText = document.getElementById("accuracy");
-const wpmText = document.getElementById("wpm");
+  let currentSentence = sentences[Math.floor(Math.random()*sentences.length)];
+  const sentenceBox = document.getElementById("sentenceBox");
+  sentenceBox.innerText = currentSentence;
 
-sentenceBox.innerText = currentSentence;
+  const typingArea = document.getElementById("typingArea");
+  let startTime;
 
-let startTime;
-typingArea.addEventListener("focus", ()=>{
+  typingArea.addEventListener("focus",()=>{
     if(!startTime) startTime = new Date();
-});
+  });
 
-typingArea.addEventListener("input", ()=>{
-    const value = typingArea.value;
-    const correctChars = value.split("").filter((c,i)=> c === currentSentence[i]).length;
-    const accuracy = Math.floor((correctChars / (currentSentence.length || 1))*100);
-    accuracyText.innerText = "Accuracy: " + accuracy + "%";
+  document.getElementById("checkSpeed").onclick = ()=>{
+    const typed = typingArea.value;
+    const sentence = currentSentence;
 
-    const minutes = (new Date() - startTime)/60000;
-    const wpm = Math.floor((value.split(" ").length)/minutes);
-    wpmText.innerText = "Speed: " + (wpm || 0) + " WPM";
-
-    if(value === currentSentence){
-        typingArea.value = "";
-        currentSentence = sentences[Math.floor(Math.random()*sentences.length)];
-        sentenceBox.innerText = currentSentence;
-        startTime = new Date();
+    // Accuracy calculation
+    let correctChars = 0;
+    for(let i=0;i<sentence.length;i++){
+      if(typed[i]===sentence[i]) correctChars++;
     }
-});
+    const accuracy = Math.floor((correctChars/sentence.length)*100);
 
-// ----- WhatsApp buttons -----
-document.getElementById("whatsappGroup").onclick = ()=>{
-    window.open("https://chat.whatsapp.com/HVM9Spvm7HVGLERj8yo9kS","_blank");
-};
-document.getElementById("whatsappChannel").onclick = ()=>{
-    window.open("https://whatsapp.com/channel/0029Vb6EE3S0LKZMNhNcoW22","_blank");
-};
+    // WPM calculation
+    const minutes = ((new Date())-startTime)/60000;
+    const wpm = Math.floor((typed.split(" ").length)/minutes);
 
-// Make tool unusable until joined
-let joinedGroup = false;
-let joinedChannel = false;
+    document.getElementById("finalResult").innerText = `✅ Accuracy: ${accuracy}% | Speed: ${wpm || 0} WPM`;
 
-document.getElementById("whatsappGroup").addEventListener("click", ()=>{joinedGroup=true; checkJoined();});
-document.getElementById("whatsappChannel").addEventListener("click", ()=>{joinedChannel=true; checkJoined();});
-
-function checkJoined(){
-    if(joinedGroup && joinedChannel){
-        typingArea.disabled = false;
-        document.getElementById("joinMessage").innerText = "✅ You can now start typing!";
-    } else {
-        typingArea.disabled = true;
-    }
-}
-
-// Disable input until buttons clicked
-typingArea.disabled = true;
+    // Reset input and new sentence
+    typingArea.value = "";
+    currentSentence = sentences[Math.floor(Math.random()*sentences.length)];
+    sentenceBox.innerText = currentSentence;
+    startTime = new Date();
+  }
 </script>
 </body>
 </html>
