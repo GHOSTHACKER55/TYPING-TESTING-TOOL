@@ -17,7 +17,7 @@
     align-items: center;
     min-height: 100vh;
     background: #000;
-    color: #fff;
+    color: #00ff00; /* foreground green text */
   }
 
   canvas#matrix {
@@ -29,8 +29,8 @@
 
   h1 {
     margin: 20px 0;
-    color: #ff0000;
-    text-shadow: 0 0 8px #ff0000;
+    color: #00ff00;
+    text-shadow: 0 0 8px #00ff00;
     z-index: 1;
     position: relative;
   }
@@ -45,31 +45,25 @@
     background: rgba(0,0,0,0.75);
     border-radius: 15px;
     padding: 20px;
-    box-shadow: 0 0 20px #ff0000;
+    box-shadow: 0 0 20px #00ff00;
   }
 
-  .logo-placeholder {
+  .logo-placeholder img {
     width: 60px;
     height: 60px;
-    background: #222;
     border-radius: 10px;
-    margin-right: 15px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ff0000;
-    font-weight: bold;
   }
 
   .content {
     flex-grow: 1;
+    margin-left: 15px;
   }
 
   .sentence {
     font-size: 18px;
     margin-bottom: 15px;
     user-select: none;
+    color: #00ff00;
   }
 
   textarea {
@@ -79,8 +73,8 @@
     border-radius: 10px;
     border: none;
     resize: none;
-    background: #222;
-    color: #ff4444;
+    background: #111;
+    color: #00ff00;
   }
 
   button {
@@ -93,49 +87,28 @@
     font-weight: bold;
     transition: 0.3s;
     width: 100%;
-  }
-
-  #checkBtn {
-    background: linear-gradient(45deg, #ff4444, #cc0000);
-    color: #000;
+    background: #002200;
+    color: #00ff00;
   }
 
   #checkBtn:disabled {
-    background: #555;
+    background: #003300;
     cursor: not-allowed;
-  }
-
-  #whatsappGroup {
-    background: #25D366;
-    color: #fff;
-  }
-
-  #whatsappGroup:hover {
-    background: #1ebe5d;
-  }
-
-  #whatsappChannel {
-    background: #128C7E;
-    color: #fff;
-  }
-
-  #whatsappChannel:hover {
-    background: #0f6e63;
   }
 
   .result {
     margin-top: 15px;
     font-size: 20px;
-    color: #ffdd00;
     font-weight: bold;
     min-height: 28px;
+    color: #00ff00;
   }
 
   .locked-msg {
     margin-top: 10px;
-    color: #ff4444;
     font-size: 16px;
     text-align: center;
+    color: #00ff00;
   }
 </style>
 </head>
@@ -146,9 +119,8 @@
 <h1>Anonymous Shadows Typing Test</h1>
 
 <div class="container">
-  <div class="https://i.supaimg.com/deaa2a84-9bbc-4269-8375-bb54a6c8e71e.jpg">
-    LOGO
-    <!-- Replace this with your <img src="https://i.supaimg.com/deaa2a84-9bbc-4269-8375-bb54a6c8e71e.jpg" alt="Logo"> -->
+  <div class="logo-placeholder">
+    <img src="https://i.supaimg.com/deaa2a84-9bbc-4269-8375-bb54a6c8e71e.jpg" alt="Logo">
   </div>
   <div class="content">
     <div class="sentence" id="sentence">Join our WhatsApp to unlock the tool!</div>
@@ -163,10 +135,9 @@
 </div>
 
 <script>
-  // Matrix effect
+  // Red Matrix effect in background
   const canvas = document.getElementById('matrix');
   const ctx = canvas.getContext('2d');
-
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
@@ -179,7 +150,7 @@
     ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.fillStyle = "#ff0000";
+    ctx.fillStyle = "#ff0000"; // red letters
     ctx.font = fontSize + "px monospace";
 
     for (let i = 0; i < drops.length; i++) {
