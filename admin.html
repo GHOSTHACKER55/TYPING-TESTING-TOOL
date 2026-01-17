@@ -3,84 +3,111 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ANONYMOUS SHADOWS - Admin Dashboard</title>
-
-<!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
-<!-- Styles -->
+<title>Anonymous Shadows Admin</title>
 <style>
-  body{
+  body {
+    background: #0f172a;
+    color: #fff;
     font-family: Arial, sans-serif;
-    background:#0f172a;
-    color:#fff;
-    padding:20px;
+    padding: 20px;
   }
-  h1{
-    color:#38bdf8;
+  h1 { color: #38bdf8; }
+  .stat { margin: 15px 0; font-size: 18px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
   }
-  .card{
-    background:#1e293b;
-    padding:15px;
-    margin:10px 0;
-    border-radius:10px;
+  table, th, td {
+    border: 1px solid #fff;
   }
-  button{
-    padding:10px 20px;
-    margin-top:10px;
-    border:none;
-    border-radius:6px;
-    background:#2563eb;
-    color:#fff;
-    cursor:pointer;
-    font-size:16px;
+  th, td {
+    padding: 8px;
+    text-align: left;
   }
+  th { background: #2563eb; }
 </style>
 </head>
 <body>
 
-<h1>ANONYMOUS SHADOWS - Admin Dashboard</h1>
+<h1>Anonymous Shadows Admin Panel</h1>
 
-<div class="card">
-  Total Users Opened: <span id="totalUsers">Loading...</span>
-</div>
+<div class="stat">Total Visits: <span id="totalVisits">0</span></div>
+<div class="stat">Today's Active Users: <span id="dailyActive">0</span></div>
 
-<div class="card">
-  Today’s Active Users: <span id="todayUsers">Loading...</span>
-</div>
+<h2>Recent Typing Sessions</h2>
+<table id="sessionsTable">
+  <tr>
+    <th>Time</th>
+    <th>Sentence</th>
+    <th>Typed</th>
+    <th>WPM</th>
+    <th>Accuracy</th>
+  </tr>
+</table>
 
-<div class="card">
-  <button onclick="sendNotification()">Send Push Notification</button>
-  <p style="font-size:14px;">*You must use Firebase Console to send notifications for now.</p>
-</div>
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.6.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore-compat.js"></script>
 
 <script>
-  // 🔑 Firebase Config - Replace with your Firebase Web App config
+  // 🔑 Replace with your Firebase config from Gemini
   const firebaseConfig = {
     apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID"
+    authDomain: "anonymous-shadows.firebaseapp.com",
+    projectId: "anonymous-shadows",
+    storageBucket: "anonymous-shadows.appspot.com",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID",
+    vapidKey: "YOUR_VAPID_KEY"
   };
 
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
 
-  // Load total users opened
-  db.collection("visits").get().then(snapshot=>{
-    document.getElementById("totalUsers").innerText = snapshot.size;
-  });
+  const totalVisitsEl = document.getElementById("totalVisits");
+  const dailyActiveEl = document.getElementById("dailyActive");
+  const table = document.getElementById("sessionsTable");
 
-  // Load today’s active users
-  const today = new Date().toISOString().slice(0,10);
-  db.collection("visits").where("date","==",today).get().then(snapshot=>{
-    document.getElementById("todayUsers").innerText = snapshot.size;
-  });
+  // Load visits and typing sessions
+  db.collection("visits").orderBy("time", "desc").onSnapshot(snapshot => {
+    const visits = snapshot.docs;
+    totalVisitsEl.innerText = visits.length;
 
-  // Send notification placeholder
-  function sendNotification(){
-    alert("Open Firebase Console → Cloud Messaging → Send Notification to your users");
-  }
+    // Count today's users
+    const today = new Date();
+    const daily = visits.filter(doc => {
+      const visitTime = doc.data().time.toDate();
+      return visitTime.getDate() === today.getDate() &&
+             visitTime.getMonth() === today.getMonth() &&
+             visitTime.getFullYear() === today.getFullYear();
+    });
+    dailyActiveEl.innerText = daily.length;
+
+    // Fill table
+    table.innerHTML = `
+      <tr>
+        <th>Time</th>
+        <th>Sentence</th>
+        <th>Typed</th>
+        <th>WPM</th>
+        <th>Accuracy</th>
+      </tr>
+    `;
+    visits.forEach(doc => {
+      const data = doc.data();
+      const time = data.time.toDate().toLocaleString();
+      table.innerHTML += `
+        <tr>
+          <td>${time}</td>
+          <td>${data.sentence}</td>
+          <td>${data.typed}</td>
+          <td>${data.wpm}</td>
+          <td>${data.accuracy}</td>
+        </tr>
+      `;
+    });
+  });
 </script>
 
 </body>
