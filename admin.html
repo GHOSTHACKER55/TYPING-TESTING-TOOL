@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ANONYMOUS SHADOWS - Admin Dashboard</title>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<!-- Styles -->
+<style>
+  body{
+    font-family: Arial, sans-serif;
+    background:#0f172a;
+    color:#fff;
+    padding:20px;
+  }
+  h1{
+    color:#38bdf8;
+  }
+  .card{
+    background:#1e293b;
+    padding:15px;
+    margin:10px 0;
+    border-radius:10px;
+  }
+  button{
+    padding:10px 20px;
+    margin-top:10px;
+    border:none;
+    border-radius:6px;
+    background:#2563eb;
+    color:#fff;
+    cursor:pointer;
+    font-size:16px;
+  }
+</style>
+</head>
+<body>
+
+<h1>ANONYMOUS SHADOWS - Admin Dashboard</h1>
+
+<div class="card">
+  Total Users Opened: <span id="totalUsers">Loading...</span>
+</div>
+
+<div class="card">
+  Today’s Active Users: <span id="todayUsers">Loading...</span>
+</div>
+
+<div class="card">
+  <button onclick="sendNotification()">Send Push Notification</button>
+  <p style="font-size:14px;">*You must use Firebase Console to send notifications for now.</p>
+</div>
+
+<script>
+  // 🔑 Firebase Config - Replace with your Firebase Web App config
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  // Load total users opened
+  db.collection("visits").get().then(snapshot=>{
+    document.getElementById("totalUsers").innerText = snapshot.size;
+  });
+
+  // Load today’s active users
+  const today = new Date().toISOString().slice(0,10);
+  db.collection("visits").where("date","==",today).get().then(snapshot=>{
+    document.getElementById("todayUsers").innerText = snapshot.size;
+  });
+
+  // Send notification placeholder
+  function sendNotification(){
+    alert("Open Firebase Console → Cloud Messaging → Send Notification to your users");
+  }
+</script>
+
+</body>
+</html>
