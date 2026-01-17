@@ -1,114 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Anonymous Shadows Admin</title>
-<style>
-  body {
-    background: #0f172a;
-    color: #fff;
-    font-family: Arial, sans-serif;
-    padding: 20px;
-  }
-  h1 { color: #38bdf8; }
-  .stat { margin: 15px 0; font-size: 18px; }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-  }
-  table, th, td {
-    border: 1px solid #fff;
-  }
-  th, td {
-    padding: 8px;
-    text-align: left;
-  }
-  th { background: #2563eb; }
-</style>
+    <title>Anonymous Shadows Admin</title>
 </head>
 <body>
+    <h1>Admin Panel</h1>
+    <div id="visits"></div>
+    <div id="typing"></div>
 
-<h1>Anonymous Shadows Admin Panel</h1>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
-<div class="stat">Total Visits: <span id="totalVisits">0</span></div>
-<div class="stat">Today's Active Users: <span id="dailyActive">0</span></div>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCtjMyazrVnGFRASQOGjqeR_U9novXC15k",
+            authDomain: "anonymous-shadows.firebaseapp.com",
+            projectId: "anonymous-shadows",
+            storageBucket: "anonymous-shadows.firebasestorage.app",
+            messagingSenderId: "939891243370",
+            appId: "1:939891243370:web:8db01f36d0afa9a58b8d13",
+            vapidKey: "BPRhIQxTwlYR0K3pZD8QomSlZFBbZz4txXmbH-i0Q5oWaf54VTVjyZ4TqsfpBgac2IMOpeOY59DMb6lsoiMewSU"
+        };
 
-<h2>Recent Typing Sessions</h2>
-<table id="sessionsTable">
-  <tr>
-    <th>Time</th>
-    <th>Sentence</th>
-    <th>Typed</th>
-    <th>WPM</th>
-    <th>Accuracy</th>
-  </tr>
-</table>
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-<!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/10.6.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore-compat.js"></script>
+        async function loadVisits() {
+            const q = query(collection(db, "userVisits"), orderBy("timestamp", "desc"));
+            const snapshot = await getDocs(q);
+            let html = "<h2>User Visits:</h2><ul>";
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                html += `<li>${data.timestamp?.toDate()} - ${data.userAgent} - ${data.page}</li>`;
+            });
+            html += "</ul>";
+            document.getElementById("visits").innerHTML = html;
+        }
 
-<script>
-  // 🔑 Replace with your Firebase config from Gemini
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "anonymous-shadows.firebaseapp.com",
-    projectId: "anonymous-shadows",
-    storageBucket: "anonymous-shadows.appspot.com",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID",
-    vapidKey: "YOUR_VAPID_KEY"
-  };
+        async function loadTyping() {
+            const q = query(collection(db, "typingSessions"), orderBy("timestamp", "desc"));
+            const snapshot = await getDocs(q);
+            let html = "<h2>Typing Sessions:</h2><ul>";
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                html += `<li>${data.timestamp?.toDate()} - WPM: ${data.speed} - Sentence: ${data.sentence}</li>`;
+            });
+            html += "</ul>";
+            document.getElementById("typing").innerHTML = html;
+        }
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-
-  const totalVisitsEl = document.getElementById("totalVisits");
-  const dailyActiveEl = document.getElementById("dailyActive");
-  const table = document.getElementById("sessionsTable");
-
-  // Load visits and typing sessions
-  db.collection("visits").orderBy("time", "desc").onSnapshot(snapshot => {
-    const visits = snapshot.docs;
-    totalVisitsEl.innerText = visits.length;
-
-    // Count today's users
-    const today = new Date();
-    const daily = visits.filter(doc => {
-      const visitTime = doc.data().time.toDate();
-      return visitTime.getDate() === today.getDate() &&
-             visitTime.getMonth() === today.getMonth() &&
-             visitTime.getFullYear() === today.getFullYear();
-    });
-    dailyActiveEl.innerText = daily.length;
-
-    // Fill table
-    table.innerHTML = `
-      <tr>
-        <th>Time</th>
-        <th>Sentence</th>
-        <th>Typed</th>
-        <th>WPM</th>
-        <th>Accuracy</th>
-      </tr>
-    `;
-    visits.forEach(doc => {
-      const data = doc.data();
-      const time = data.time.toDate().toLocaleString();
-      table.innerHTML += `
-        <tr>
-          <td>${time}</td>
-          <td>${data.sentence}</td>
-          <td>${data.typed}</td>
-          <td>${data.wpm}</td>
-          <td>${data.accuracy}</td>
-        </tr>
-      `;
-    });
-  });
-</script>
-
+        loadVisits();
+        loadTyping();
+    </script>
 </body>
 </html>
