@@ -4,67 +4,84 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Anonymous Shadows Typing Test</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
+    /* Body & Background */
     body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: #121212;
-        color: #e0e0e0;
+        font-family: 'Share Tech Mono', monospace;
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        color: #ffffff;
         text-align: center;
         padding: 20px;
         margin: 0;
     }
 
+    /* Title */
     h1 {
-        color: #00ff99;
-        margin-bottom: 20px;
-        font-size: 1.8em;
+        font-family: 'Orbitron', sans-serif;
+        color: #00ffcc;
+        font-size: 2em;
+        margin-bottom: 25px;
+        text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc;
     }
 
+    /* Sentence Box */
     #sentence {
-        font-size: 1.3em;
-        color: #ffffff;
+        font-size: 1.4em;
+        color: #fffb00;
         margin: 20px auto;
-        padding: 15px;
-        background: #1e1e1e;
-        border-radius: 10px;
+        padding: 20px;
+        background: #1b1b2f;
+        border-radius: 15px;
         width: 90%;
-        user-select: none; /* prevent copy */
+        user-select: none;
+        box-shadow: 0 0 15px #fffb00;
     }
 
+    /* Typing Area */
     textarea {
         width: 90%;
         height: 120px;
         margin-top: 20px;
-        padding: 10px;
-        font-size: 1.1em;
-        border-radius: 10px;
-        border: none;
+        padding: 15px;
+        font-size: 1.2em;
+        border-radius: 15px;
+        border: 2px solid #00ffcc;
         outline: none;
         resize: none;
+        background: #0d0d1a;
+        color: #ffffff;
+        box-shadow: 0 0 10px #00ffcc inset;
     }
 
+    /* Button */
     button {
         margin-top: 20px;
-        padding: 12px 25px;
+        padding: 15px 30px;
         font-size: 1.2em;
-        background: #00ff99;
-        color: #121212;
+        font-family: 'Orbitron', sans-serif;
+        background: linear-gradient(45deg, #00ffcc, #ff00ff);
+        color: #000;
         border: none;
-        border-radius: 8px;
+        border-radius: 12px;
         cursor: pointer;
+        box-shadow: 0 0 15px #00ffcc, 0 0 25px #ff00ff;
         transition: 0.3s;
     }
 
     button:hover {
-        background: #00cc77;
+        background: linear-gradient(45deg, #ff00ff, #00ffcc);
+        box-shadow: 0 0 25px #00ffcc, 0 0 35px #ff00ff;
     }
 
+    /* Accuracy Display */
     #speed {
-        margin-top: 20px;
-        font-size: 1.4em;
-        color: #ffcc00;
+        margin-top: 25px;
+        font-size: 1.5em;
+        color: #fffb00;
+        text-shadow: 0 0 8px #fffb00;
     }
-
 </style>
 </head>
 <body>
@@ -84,7 +101,9 @@ const sentences = [
     "The quick brown fox jumps over the lazy dog.",
     "Typing speed tests help improve your keyboard skills.",
     "Anonymous Shadows is a cyber-style typing tool.",
-    "Practice makes perfect in everything you do."
+    "Practice makes perfect in everything you do.",
+    "Challenge yourself daily to become faster.",
+    "Keep typing and never give up on learning."
 ];
 
 const sentenceDiv = document.getElementById("sentence");
@@ -95,13 +114,13 @@ const button = document.getElementById("checkBtn");
 let startTime = null;
 let currentSentence = "";
 
-// Choose a random sentence
+// Function to choose a random sentence
 function newSentence() {
     currentSentence = sentences[Math.floor(Math.random() * sentences.length)];
     sentenceDiv.innerText = currentSentence;
     textarea.value = "";
     speedDisplay.innerText = "Your accuracy will appear here!";
-    speedDisplay.style.color = "#ffcc00";
+    speedDisplay.style.color = "#fffb00";
     startTime = null;
 }
 
@@ -130,7 +149,7 @@ button.addEventListener("click", () => {
     const accuracy = Math.min(100, Math.round((correctChars / currentSentence.length) * 100));
     speedDisplay.innerText = `Accuracy: ${accuracy}%`;
 
-    // Optionally reset with a new sentence
+    // Show next sentence after 3 seconds
     setTimeout(newSentence, 3000);
 });
 </script>
