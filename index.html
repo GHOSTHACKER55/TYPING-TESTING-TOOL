@@ -17,7 +17,7 @@
     align-items: center;
     min-height: 100vh;
     background: #000;
-    color: #00ff00;
+    color: #00aa00; /* dark neon green text */
   }
 
   canvas#matrix {
@@ -37,17 +37,17 @@
     position: relative;
   }
 
-  /* Dark neon green glowing title */
+  /* Main dark neon green glowing title */
   h1#title {
     font-size: 48px;
-    color: #00aa00;
+    color: #00aa00; /* dark neon green */
     text-align: center;
     text-shadow:
         0 0 5px #00aa00,
         0 0 10px #00aa00,
-        0 0 20px #00ff00,
-        0 0 40px #00ff00,
-        0 0 80px #00ff00;
+        0 0 20px #00cc00,
+        0 0 40px #00cc00,
+        0 0 80px #00cc00;
     margin: 20px 0 40px 0;
     z-index: 1;
     position: relative;
@@ -63,14 +63,14 @@
     background: rgba(0,0,0,0.75);
     border-radius: 15px;
     padding: 20px;
-    box-shadow: 0 0 20px #00ff00;
+    box-shadow: 0 0 20px #00aa00;
   }
 
   .sentence {
     font-size: 18px;
     margin-bottom: 15px;
     user-select: none;
-    color: #00ff00;
+    color: #00aa00; /* dark neon green */
   }
 
   textarea {
@@ -81,7 +81,7 @@
     border: none;
     resize: none;
     background: #111;
-    color: #00ff00;
+    color: #00aa00; /* dark neon green */
   }
 
   button {
@@ -95,7 +95,10 @@
     transition: 0.3s;
     width: 100%;
     background: #002200;
-    color: #00ff00;
+    color: #00aa00; /* dark neon green */
+    text-shadow:
+        0 0 3px #00aa00,
+        0 0 5px #00aa00;
   }
 
   #checkBtn:disabled {
@@ -108,14 +111,14 @@
     font-size: 20px;
     font-weight: bold;
     min-height: 28px;
-    color: #00ff00;
+    color: #00aa00; /* dark neon green */
   }
 
   .locked-msg {
     margin-top: 10px;
     font-size: 16px;
     text-align: center;
-    color: #00ff00;
+    color: #00aa00; /* dark neon green */
   }
 </style>
 </head>
@@ -123,7 +126,7 @@
 
 <canvas id="matrix"></canvas>
 
-<!-- Top logo -->
+<!-- Top center logo -->
 <div class="top-logo">
   <img src="https://i.supaimg.com/deaa2a84-9bbc-4269-8375-bb54a6c8e71e.jpg" alt="Logo">
 </div>
