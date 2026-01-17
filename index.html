@@ -3,160 +3,172 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Anonymous Shadows Typing Test</title>
+<title>Anonymous Shadows Typing Test 🕶️🔥</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
-
-  body {
-    font-family: 'Roboto Mono', monospace;
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-    color: #fff;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-  }
-  h1 {
-    margin: 20px 0;
-    color: #00ff99;
-    text-shadow: 0 0 8px #00ff99;
-  }
-  .container {
-    width: 95%;
-    max-width: 500px;
-    background: rgba(0,0,0,0.75);
-    border-radius: 15px;
-    padding: 20px;
-    box-shadow: 0 0 20px #00ff99;
-  }
-  .sentence {
-    font-size: 18px;
-    margin-bottom: 15px;
-    user-select: none;
-  }
-  textarea {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    border-radius: 10px;
-    border: none;
-    resize: none;
-    background: #222;
-    color: #00ffcc;
-  }
-  button {
-    padding: 14px 0;
-    font-size: 18px;
-    border-radius: 10px;
-    border: none;
-    cursor: pointer;
-    margin: 10px 0 0 0;
-    font-weight: bold;
-    transition: 0.3s;
-    width: 100%;
-  }
-  #checkBtn {
-    background: linear-gradient(45deg, #00ff99, #00cc77);
-    color: #000;
-  }
-  #checkBtn:disabled {
-    background: #555;
-    cursor: not-allowed;
-  }
-  #whatsappGroup {
-    background: #25D366;
-    color: #fff;
-  }
-  #whatsappGroup:hover {
-    background: #1ebe5d;
-  }
-  #whatsappChannel {
-    background: #128C7E;
-    color: #fff;
-  }
-  #whatsappChannel:hover {
-    background: #0f6e63;
-  }
-  .result {
-    margin-top: 15px;
-    font-size: 20px;
-    color: #ffdd00;
-    font-weight: bold;
-    min-height: 28px;
-  }
-  .locked-msg {
-    margin-top: 10px;
-    color: #ff4444;
-    font-size: 16px;
-    text-align: center;
-  }
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Orbitron', sans-serif;
+        background: black;
+        color: #00ffea;
+        overflow: hidden;
+    }
+    h1 {
+        text-align: center;
+        font-size: 2em;
+        color: #00ffea;
+        margin-top: 20px;
+        text-shadow: 0 0 10px #00ffea, 0 0 20px #ff00ff;
+    }
+    #description {
+        text-align: center;
+        margin: 10px;
+        font-size: 1em;
+        line-height: 1.5em;
+        color: #fffa;
+    }
+    #typingArea {
+        display: block;
+        width: 90%;
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 10px;
+        font-size: 1.2em;
+        background: #111;
+        border: 2px solid #0ff;
+        color: #0ff;
+        border-radius: 10px;
+    }
+    #startBtn, .whatsappBtn {
+        display: block;
+        width: 90%;
+        max-width: 300px;
+        margin: 10px auto;
+        padding: 12px;
+        font-size: 1.2em;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: bold;
+        text-align: center;
+        text-decoration: none;
+    }
+    #startBtn {
+        background: linear-gradient(90deg, #ff00ff, #00ffff);
+        color: #fff;
+        text-shadow: 0 0 5px #fff;
+    }
+    .whatsappBtn {
+        background: #25d366;
+        color: white;
+    }
+    #accuracy, #wpm {
+        text-align: center;
+        font-size: 1.2em;
+        margin: 5px;
+        color: #ff0;
+        text-shadow: 0 0 5px #ff0;
+    }
+    canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: -1;
+    }
 </style>
 </head>
 <body>
 
-<h1>Anonymous Shadows Typing Test</h1>
+<canvas id="matrix"></canvas>
 
-<div class="container">
-  <div class="sentence" id="sentence">Join our WhatsApp to unlock the tool!</div>
-  <textarea id="input" rows="4" placeholder="Start typing here..." disabled></textarea>
-  <br>
-  <button id="checkBtn" disabled>Check Accuracy & WPM</button>
-  <button id="whatsappGroup" onclick="unlockTool('group')">Join WhatsApp Group</button>
-  <button id="whatsappChannel" onclick="unlockTool('channel')">Visit WhatsApp Channel</button>
-  <div class="result" id="result"></div>
-  <div class="locked-msg" id="lockedMsg">You must join WhatsApp before using the tool!</div>
-</div>
+<h1>🕶️ Anonymous Shadows Typing Test 🔥</h1>
+
+<div id="description">Welcome to the ultimate typing challenge! ⚡ Type fast, stay accurate 💯, and join our WhatsApp community 🟢. Accuracy never disappears and every keystroke counts! 🚀</div>
+
+<input type="text" id="typingArea" placeholder="Start typing here..." autofocus>
+
+<div id="accuracy">Accuracy: 100%</div>
+<div id="wpm">Speed: 0 WPM</div>
+
+<button id="startBtn">Start Test 🚀</button>
+
+<a href="https://chat.whatsapp.com/HVM9Spvm7HVGLERj8yo9kS" target="_blank" class="whatsappBtn">Join WhatsApp Group 🟢</a>
+<a href="https://whatsapp.com/channel/0029Vb6EE3S0LKZMNhNcoW22" target="_blank" class="whatsappBtn">Join WhatsApp Channel 🟢</a>
 
 <script>
-  const sentences = [
-    "How are you doing today?",
-    "The quick brown fox jumps over the lazy dog.",
-    "Anonymous Shadows is the coolest typing tool.",
-    "Typing speed tests are fun and challenging.",
-    "Keep practicing to improve your accuracy.",
-    "Never give up and always stay motivated.",
-    "Fast typing leads to better productivity.",
-    "Focus and concentration improve your speed."
-  ];
+// MATRIX RED BACKGROUND
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
 
-  let currentSentence = "";
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-  function newSentence() {
-    currentSentence = sentences[Math.floor(Math.random() * sentences.length)];
-    document.getElementById("sentence").textContent = currentSentence;
-    document.getElementById("input").value = "";
-  }
+const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const fontSize = 20;
+const columns = canvas.width / fontSize;
+const drops = [];
 
-  function unlockTool(source) {
-    // Open WhatsApp link
-    if (source === 'group') {
-      window.open('https://chat.whatsapp.com/HVM9Spvm7HVGLERj8yo9kS', '_blank');
-    } else if (source === 'channel') {
-      window.open('https://whatsapp.com/channel/0029Vb6EE3S0LKZMNhNcoW22', '_blank');
+for(let x = 0; x < columns; x++) drops[x] = Math.random()*canvas.height;
+
+function drawMatrix() {
+    ctx.fillStyle = "rgba(0,0,0,0.05)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#ff0000";
+    ctx.font = fontSize + "px monospace";
+    for(let i = 0; i < drops.length; i++) {
+        const text = letters.charAt(Math.floor(Math.random()*letters.length));
+        ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+        drops[i]++;
+        if(drops[i]*fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
     }
-    // Enable typing tool
-    document.getElementById("input").disabled = false;
-    document.getElementById("checkBtn").disabled = false;
-    document.getElementById("lockedMsg").textContent = "Tool unlocked! Start typing below.";
-    newSentence();
-  }
+}
+setInterval(drawMatrix, 50);
 
-  document.getElementById("checkBtn").addEventListener("click", () => {
-    const input = document.getElementById("input").value;
-    let correct = 0;
-    const words1 = currentSentence.split(" ");
-    const words2 = input.split(" ");
-    words1.forEach((w, i) => { if(w === words2[i]) correct++; });
-    const accuracy = Math.round((correct / words1.length) * 100);
-    const wpm = Math.round(words2.length); // Approximation
-    document.getElementById("result").textContent = `Accuracy: ${accuracy}% | WPM: ${wpm}`;
-    newSentence();
-  });
+// SIMPLE TYPING SPEED AND ACCURACY
+const typingArea = document.getElementById("typingArea");
+const accuracyText = document.getElementById("accuracy");
+const wpmText = document.getElementById("wpm");
 
-  // Disable right-click copy
-  document.addEventListener('contextmenu', event => event.preventDefault());
+let startTime, typed = "", totalTyped = 0;
+
+typingArea.addEventListener("input", (e)=>{
+    const value = e.target.value;
+    if(!startTime) startTime = new Date();
+    totalTyped++;
+    typed = value;
+    // Simple accuracy calculation (example)
+    const correctChars = value.split("").filter((c,i)=> c === getRandomSentence()[i]).length;
+    const accuracy = Math.floor((correctChars / (value.length || 1)) * 100);
+    accuracyText.innerText = "Accuracy: " + accuracy + "%";
+    const minutes = (new Date() - startTime)/60000;
+    const wpm = Math.floor((value.split(" ").length)/minutes);
+    wpmText.innerText = "Speed: " + (wpm || 0) + " WPM";
+});
+
+// DYNAMIC SENTENCES
+function getRandomSentence(){
+    const sentences = [
+        "How are you doing today?",
+        "Typing fast improves your skills!",
+        "Practice makes perfect in every way.",
+        "Anonymous Shadows is the ultimate typing tool.",
+        "Join our WhatsApp group to unlock full access."
+    ];
+    return sentences[Math.floor(Math.random()*sentences.length)];
+}
+
+// START BUTTON
+document.getElementById("startBtn").addEventListener("click", ()=>{
+    typingArea.value = "";
+    startTime = null;
+    typed = "";
+    totalTyped = 0;
+    accuracyText.innerText = "Accuracy: 100%";
+    wpmText.innerText = "Speed: 0 WPM";
+    typingArea.placeholder = getRandomSentence();
+    typingArea.focus();
+});
 </script>
 
 </body>
