@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Anonymous Shadows Typing Test ⌨️🔥</title>
+<title>Anonymous Shadows Typing Test</title>
 <style>
-  /* Reset & base */
   * { margin:0; padding:0; box-sizing:border-box; font-family: 'Courier New', monospace; }
   body { background:#000; color:#fff; overflow-x:hidden; min-height:100vh; }
 
@@ -13,15 +12,12 @@
   canvas#bg { position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1; }
 
   /* Header */
-  header { display:flex; align-items:center; justify-content:space-between; padding:20px; background:linear-gradient(90deg, #ff0055, #ff5500); }
-  #logo { width:50px; height:50px; background:#fff; border-radius:50%; display:inline-block; margin-right:15px; }
+  header { display:flex; align-items:center; justify-content:flex-start; padding:20px; background:linear-gradient(90deg, #ff0055, #ff5500); }
+  #logo { width:50px; height:50px; background:#222; border-radius:10px; display:inline-block; margin-right:15px; }
   h1 { font-family:'Orbitron', sans-serif; font-size:1.8rem; color:#fff; }
 
-  /* Description */
-  #description { padding:20px; font-size:1.1rem; text-align:center; line-height:1.6; color:#0f0; }
-  
   /* Tool container */
-  .typing-tool { max-width:800px; margin:20px auto; padding:20px; background:rgba(0,0,0,0.85); border-radius:15px; box-shadow:0 0 20px #ff0055; }
+  .typing-tool { max-width:800px; margin:40px auto; padding:20px; background:rgba(0,0,0,0.85); border-radius:15px; box-shadow:0 0 20px #ff0055; text-align:center; }
 
   /* Sentence display */
   #sentence { font-size:1.2rem; padding:15px; background:#111; border-radius:10px; margin-bottom:20px; user-select:none; }
@@ -30,10 +26,10 @@
   #typingInput { width:100%; padding:15px; font-size:1.2rem; border-radius:10px; border:none; outline:none; background:#222; color:#fff; margin-bottom:20px; user-select:none; }
 
   /* Buttons */
-  button { padding:15px 25px; font-size:1rem; border:none; border-radius:10px; cursor:pointer; margin:10px 0; font-weight:bold; transition:0.3s; }
-  #checkBtn { background:linear-gradient(90deg,#ff0055,#ff5500); color:#fff; width:100%; }
-  #whatsappChannel { background:linear-gradient(90deg,#25d366,#128c7e); color:#fff; width:100%; }
-  #whatsappGroup { background:linear-gradient(90deg,#34b7f1,#075e54); color:#fff; width:100%; }
+  button { padding:15px 25px; font-size:1rem; border:none; border-radius:10px; cursor:pointer; margin:10px 0; font-weight:bold; transition:0.3s; width:100%; }
+  #checkBtn { background:linear-gradient(90deg,#ff0055,#ff5500); color:#fff; }
+  #whatsappChannel { background:linear-gradient(90deg,#25d366,#128c7e); color:#fff; }
+  #whatsappGroup { background:linear-gradient(90deg,#34b7f1,#075e54); color:#fff; }
 
   button:hover { opacity:0.9; }
 
@@ -41,7 +37,10 @@
   .stats { display:flex; justify-content:space-around; font-size:1.2rem; margin-top:15px; }
   .stats div { background:#111; padding:10px 15px; border-radius:10px; color:#ff0; font-weight:bold; }
 
-  /* Responsive */
+  /* Disabled overlay */
+  #overlay { position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); display:flex; flex-direction:column; justify-content:center; align-items:center; z-index:10; }
+  #overlay p { color:#fff; font-size:1.2rem; margin-bottom:20px; text-align:center; padding:0 20px; }
+
   @media(max-width:600px){
     h1 { font-size:1.4rem; }
     #sentence, #typingInput { font-size:1rem; padding:10px; }
@@ -55,42 +54,43 @@
 
 <header>
   <div id="logo"></div>
-  <h1>Anonymous Shadows Typing Test ⌨️🔥</h1>
+  <h1>Anonymous Shadows Typing Test</h1>
 </header>
-
-<div id="description">
-🚀 Welcome to the ultimate <b>Typing Challenge</b>! 💻<br>
-Test your speed, improve your accuracy, and have fun with cyber vibes! 🌌💾<br>
-💡 Motivational sentences will keep you on your toes! Keep typing and unlock your inner hacker skills! 🕶️👾
-</div>
 
 <div class="typing-tool">
   <div id="sentence">Loading sentence...</div>
-  <input type="text" id="typingInput" placeholder="Start typing here..." autocomplete="off">
-  <button id="checkBtn">Check Typing Speed ⌨️⚡</button>
+  <input type="text" id="typingInput" placeholder="Start typing here..." autocomplete="off" disabled>
+  <button id="checkBtn" disabled>Check Typing Speed</button>
 
   <div class="stats">
-    <div id="wpm">WPM: 0 ⏱️</div>
-    <div id="accuracy">Accuracy: 0% 🎯</div>
+    <div id="wpm">WPM: 0</div>
+    <div id="accuracy">Accuracy: 0%</div>
   </div>
 
-  <button id="whatsappChannel">Join WhatsApp Channel 📢</button>
-  <button id="whatsappGroup">Join WhatsApp Group 👥</button>
+  <button id="whatsappChannel">Join WhatsApp Channel</button>
+  <button id="whatsappGroup">Join WhatsApp Group</button>
+</div>
+
+<!-- Overlay forcing WhatsApp join -->
+<div id="overlay">
+  <p>You must join our WhatsApp Channel or Group to unlock the Typing Test!</p>
+  <button id="overlayChannel">Join WhatsApp Channel</button>
+  <button id="overlayGroup">Join WhatsApp Group</button>
 </div>
 
 <script>
-  // Sentence array
+  // Sentences (plain, no emojis)
   const sentences = [
-    "Keep pushing your limits and typing faster every day! 💪⌨️",
-    "Hacking your typing skills is the first step to cyber domination! 🕶️🔥",
-    "Fast fingers, sharp mind, unstoppable coder! 👾💻",
-    "Every keystroke brings you closer to mastery! 🚀💾",
-    "Type like the wind and let the words flow! 🌪️✍️",
-    "Accuracy over speed is the secret to elite typists! 🎯💡",
-    "Challenge yourself and break your own records! 🏆⌨️",
-    "Typing is not just skill, it's an art form! 🎨💻",
-    "Stay focused, keep calm, and type on! 🧘‍♂️💻",
-    "Speed + Accuracy = Typing Legend! 🏅🔥"
+    "Keep pushing your limits and typing faster every day.",
+    "Hone your typing skills to become a master.",
+    "Fast fingers and sharp mind lead to success.",
+    "Every keystroke brings you closer to mastery.",
+    "Type quickly and accurately to improve your speed.",
+    "Accuracy over speed is the key to elite typing.",
+    "Challenge yourself and beat your own records.",
+    "Typing is a skill that can always be improved.",
+    "Stay focused and type with confidence.",
+    "Speed combined with accuracy makes a typing champion."
   ];
 
   let currentSentence = "";
@@ -99,12 +99,12 @@ Test your speed, improve your accuracy, and have fun with cyber vibes! 🌌💾<
   const checkBtn = document.getElementById('checkBtn');
   const wpmEl = document.getElementById('wpm');
   const accuracyEl = document.getElementById('accuracy');
+  const overlay = document.getElementById('overlay');
 
   let startTime = null;
 
   function getRandomSentence() {
-    const idx = Math.floor(Math.random()*sentences.length);
-    return sentences[idx];
+    return sentences[Math.floor(Math.random()*sentences.length)];
   }
 
   function loadNewSentence() {
@@ -112,55 +112,54 @@ Test your speed, improve your accuracy, and have fun with cyber vibes! 🌌💾<
     sentenceEl.textContent = currentSentence;
     inputEl.value = "";
     startTime = null;
-    wpmEl.textContent = "WPM: 0 ⏱️";
-    accuracyEl.textContent = "Accuracy: 0% 🎯";
+    wpmEl.textContent = "WPM: 0";
+    accuracyEl.textContent = "Accuracy: 0%";
   }
 
-  // Real-time typing accuracy
+  // Real-time accuracy
   inputEl.addEventListener('input', () => {
     if(!startTime) startTime = new Date();
     const input = inputEl.value;
-    const len = input.length;
-    let correctChars = 0;
-    for(let i=0; i<len; i++){
-      if(input[i] === currentSentence[i]) correctChars++;
-    }
-    const acc = len > 0 ? Math.round((correctChars/len)*100) : 100;
-    accuracyEl.textContent = `Accuracy: ${acc}% 🎯`;
+    const correctChars = Array.from(input).reduce((acc, char, idx) => char === currentSentence[idx] ? acc + 1 : acc, 0);
+    const acc = input.length > 0 ? Math.round(correctChars/input.length*100) : 100;
+    accuracyEl.textContent = `Accuracy: ${acc}%`;
   });
 
   // Check typing speed
   checkBtn.addEventListener('click', () => {
     if(!startTime) startTime = new Date();
     const endTime = new Date();
-    const timeTaken = (endTime - startTime)/60000; // in minutes
-    const wordsTyped = inputEl.value.trim().split(/\s+/).length;
-    const wpm = Math.round(wordsTyped / timeTaken);
-    
-    // Final accuracy
-    const input = inputEl.value;
-    let correctChars = 0;
-    for(let i=0; i<input.length; i++){
-      if(input[i] === currentSentence[i]) correctChars++;
-    }
-    const acc = input.length > 0 ? Math.round((correctChars/input.length)*100) : 100;
+    const minutes = (endTime - startTime)/60000;
+    const words = inputEl.value.trim().split(/\s+/).length;
+    const wpm = Math.round(words/minutes);
 
-    wpmEl.textContent = `WPM: ${wpm} ⏱️`;
-    accuracyEl.textContent = `Accuracy: ${acc}% 🎯`;
+    const input = inputEl.value;
+    const correctChars = Array.from(input).reduce((acc, char, idx) => char === currentSentence[idx] ? acc + 1 : acc, 0);
+    const acc = input.length > 0 ? Math.round(correctChars/input.length*100) : 100;
+
+    wpmEl.textContent = `WPM: ${wpm}`;
+    accuracyEl.textContent = `Accuracy: ${acc}%`;
 
     loadNewSentence();
   });
 
   // WhatsApp buttons
+  function unlockTool() {
+    overlay.style.display = "none";
+    inputEl.disabled = false;
+    checkBtn.disabled = false;
+    loadNewSentence();
+  }
+
   document.getElementById('whatsappChannel').onclick = () => window.open('https://whatsapp.com/channel/0029Vb6EE3S0LKZMNhNcoW22','_blank');
   document.getElementById('whatsappGroup').onclick = () => window.open('https://chat.whatsapp.com/HVM9Spvm7HVGLERj8yo9kS','_blank');
+
+  document.getElementById('overlayChannel').onclick = () => { window.open('https://whatsapp.com/channel/0029Vb6EE3S0LKZMNhNcoW22','_blank'); unlockTool(); };
+  document.getElementById('overlayGroup').onclick = () => { window.open('https://chat.whatsapp.com/HVM9Spvm7HVGLERj8yo9kS','_blank'); unlockTool(); };
 
   // Prevent copying
   inputEl.oncopy = inputEl.oncut = inputEl.onpaste = () => false;
   sentenceEl.oncopy = sentenceEl.oncut = sentenceEl.onpaste = () => false;
-
-  // Initial load
-  loadNewSentence();
 
   // Falling letters animation
   const canvas = document.getElementById('bg');
@@ -168,7 +167,7 @@ Test your speed, improve your accuracy, and have fun with cyber vibes! 🌌💾<
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
-  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()";
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   const fontSize = 20;
   const columns = canvas.width / fontSize;
   const drops = Array(Math.floor(columns)).fill(1);
