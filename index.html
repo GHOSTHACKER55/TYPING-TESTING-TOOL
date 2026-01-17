@@ -16,7 +16,7 @@
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
         import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-messaging.js";
 
-        // Firebase config
+        // Firebase config with VAPID key
         const firebaseConfig = {
             apiKey: "AIzaSyCtjMyazrVnGFRASQOGjqeR_U9novXC15k",
             authDomain: "anonymous-shadows.firebaseapp.com",
@@ -24,7 +24,7 @@
             storageBucket: "anonymous-shadows.firebasestorage.app",
             messagingSenderId: "939891243370",
             appId: "1:939891243370:web:8db01f36d0afa9a58b8d13",
-            vapidKey: "YOUR_VAPID_KEY_HERE" // Replace with actual VAPID key
+            vapidKey: "BPRhIQxTwlYR0K3pZD8QomSlZFBbZz4txXmbH-i0Q5oWaf54VTVjyZ4TqsfpBgac2IMOpeOY59DMb6lsoiMewSU"
         };
 
         // Initialize Firebase
