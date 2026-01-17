@@ -3,154 +3,141 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ANONYMOUS SHADOWS - Typing Tool</title>
-
-<!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js"></script>
-
-<!-- Styles -->
+<title>ANONYMOUS SHADOWS</title>
 <style>
-  body{
-    font-family: 'Arial', sans-serif;
+  body {
     background: #0f172a;
     color: #fff;
+    font-family: Arial, sans-serif;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     padding: 20px;
   }
-  .container{
-    max-width: 700px;
-    width: 100%;
-    background:#020617;
-    padding: 20px;
-    border-radius: 12px;
-    text-align: center;
-  }
-  h1{
-    margin-bottom: 15px;
-    color:#38bdf8;
-  }
-  .sentence{
-    background: #1e293b;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 15px;
+  h1 { color: #38bdf8; }
+  .sentence-box, input, button {
+    margin: 10px 0;
     font-size: 18px;
   }
-  textarea{
+  input {
     width: 100%;
-    height: 120px;
-    font-size: 16px;
+    max-width: 600px;
     padding: 10px;
     border-radius: 6px;
     border: none;
-    resize: none;
   }
-  button{
-    margin: 10px 5px;
+  button {
     padding: 10px 20px;
-    font-size:16px;
+    border: none;
+    border-radius: 6px;
+    background: #2563eb;
+    color: #fff;
     cursor: pointer;
-    border-radius:6px;
-    border:none;
-    background:#2563eb;
-    color:#fff;
+    font-size: 16px;
   }
-  #result{
-    margin-top: 15px;
-    font-size: 18px;
+  .stats {
+    margin-top: 20px;
   }
 </style>
 </head>
-
 <body>
-<div class="container">
-  <h1>ANONYMOUS SHADOWS</h1>
 
-  <div class="sentence" id="sentence">HOW ARE YOU HOW YOUR DAY GOES</div>
+<h1>ANONYMOUS SHADOWS Typing Tool</h1>
 
-  <textarea id="input" placeholder="Type the sentence here..."></textarea>
-  <br>
-  <button onclick="startTest()">Start</button>
-  <button onclick="resetTest()">Reset</button>
+<div class="sentence-box" id="sentenceBox">Loading sentence...</div>
+<input type="text" id="typingInput" placeholder="Type the sentence here..." />
+<button onclick="checkTyping()">Submit</button>
 
-  <div id="result"></div>
+<div class="stats">
+  <p>WPM: <span id="wpm">0</span></p>
+  <p>Accuracy: <span id="accuracy">0</span>%</p>
 </div>
 
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.6.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.6.0/firebase-messaging-compat.js"></script>
+
 <script>
-  // 🔑 Firebase Config - REPLACE with your Firebase Web App config
+  // 🔑 Replace with your Firebase config from Gemini
   const firebaseConfig = {
     apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    authDomain: "anonymous-shadows.firebaseapp.com",
+    projectId: "anonymous-shadows",
+    storageBucket: "anonymous-shadows.appspot.com",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID",
+    vapidKey: "YOUR_VAPID_KEY"
   };
+
+  // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
   const messaging = firebase.messaging();
 
-  // Request notification permission
+  // Request Notification Permission
   Notification.requestPermission().then(permission => {
     if(permission === "granted"){
-      messaging.getToken({vapidKey:"YOUR_VAPID_KEY"}).then(token=>{
+      messaging.getToken({vapidKey: firebaseConfig.vapidKey}).then(token => {
         console.log("FCM Token:", token);
-        // Save token in Firestore
-        db.collection("tokens").add({
-          token: token,
-          time: new Date()
-        });
-      }).catch(err=>console.log("Error getting FCM token:", err));
+        db.collection("tokens").add({ token: token, time: new Date() });
+      }).catch(err => console.log("FCM Error:", err));
     }
   });
 
-  // Typing Tool Logic
-  let startTime, endTime, started=false;
+  // ----- Typing Tool Logic -----
+  const sentences = [
+    "How are you?",
+    "How is your day going?",
+    "Anonymous Shadows is a dark typing tool.",
+    "Typing fast improves your WPM.",
+    "Practice makes perfect in typing."
+  ];
 
-  function startTest(){
-    document.getElementById("input").value="";
-    document.getElementById("result").innerHTML="";
-    started=true;
-    startTime=new Date().getTime();
-    document.getElementById("input").focus();
+  let startTime;
+  const sentenceBox = document.getElementById("sentenceBox");
+  const inputBox = document.getElementById("typingInput");
 
-    // Track tool opened in Firestore
+  function newSentence() {
+    const idx = Math.floor(Math.random() * sentences.length);
+    sentenceBox.innerText = sentences[idx];
+    inputBox.value = "";
+    startTime = new Date();
+  }
+
+  function checkTyping() {
+    const typed = inputBox.value;
+    const target = sentenceBox.innerText;
+    const endTime = new Date();
+    const timeSec = (endTime - startTime) / 1000 / 60; // minutes
+    const words = typed.split(" ").length;
+    const wpm = Math.round(words / timeSec);
+
+    // Accuracy calculation
+    let correct = 0;
+    for(let i=0; i<typed.length; i++){
+      if(typed[i] === target[i]) correct++;
+    }
+    const accuracy = Math.round((correct / target.length) * 100);
+
+    document.getElementById("wpm").innerText = wpm;
+    document.getElementById("accuracy").innerText = accuracy;
+
+    // Store result in Firestore
     db.collection("visits").add({
-      date:new Date().toISOString().slice(0,10),
-      time:new Date().toLocaleTimeString(),
-      typed:false
+      sentence: target,
+      typed: typed,
+      wpm: wpm,
+      accuracy: accuracy,
+      time: new Date()
     });
+
+    newSentence();
   }
 
-  document.getElementById("input").addEventListener("keyup",function(){
-    if(!started) return;
-
-    let typed=this.value;
-    let sentence=document.getElementById("sentence").innerText;
-
-    if(typed.trim()===sentence){
-      endTime=new Date().getTime();
-      let timeTaken=(endTime-startTime)/1000;
-      let words=sentence.split(" ").length;
-      let wpm=Math.round((words/timeTaken)*60);
-      let accuracy=Math.round((sentence.length/typed.length)*100);
-
-      document.getElementById("result").innerHTML =
-        `⌛ Time: ${timeTaken}s | ⚡ WPM: ${wpm} | 🎯 Accuracy: ${accuracy}%`;
-
-      // Update typed status
-      db.collection("visits").add({typed:true, time:new Date()});
-      started=false;
-    }
-  });
-
-  function resetTest(){
-    document.getElementById("input").value="";
-    document.getElementById("result").innerHTML="";
-    started=false;
-  }
+  // Load first sentence
+  newSentence();
 </script>
+
 </body>
 </html>
