@@ -1,84 +1,102 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Anonymous Shadows Web</title>
+    <meta charset="UTF-8">
+    <title>Anonymous Shadows Typing Speed Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #121212;
+            color: #e0e0e0;
+            text-align: center;
+            padding: 50px;
+        }
+
+        h1 {
+            color: #00ff99;
+            margin-bottom: 20px;
+        }
+
+        #sentence {
+            font-size: 1.5em;
+            color: #ffffff;
+            margin: 20px auto;
+            padding: 15px;
+            background: #1e1e1e;
+            border-radius: 10px;
+            width: 60%;
+        }
+
+        textarea {
+            width: 60%;
+            height: 100px;
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 1.2em;
+            border-radius: 10px;
+            border: none;
+            outline: none;
+            resize: none;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 25px;
+            font-size: 1.2em;
+            background: #00ff99;
+            color: #121212;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #00cc77;
+        }
+
+        #speed {
+            margin-top: 20px;
+            font-size: 1.5em;
+            color: #ffcc00;
+        }
+    </style>
 </head>
 <body>
-    <h1>Anonymous Shadows Typing Tool</h1>
-    <p>Type the sentence below as fast as you can:</p>
+    <h1>Anonymous Shadows Typing Speed Test</h1>
+
     <div id="sentence">How are you? How is your day going?</div>
-    <textarea id="typingArea" rows="4" cols="50"></textarea>
-    <p id="speed">Typing speed will appear here.</p>
 
-    <!-- Firebase SDKs -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
-        import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-messaging.js";
+    <textarea id="typingArea" placeholder="Type the sentence above exactly here..."></textarea><br>
+    <button id="checkBtn">Check Speed</button>
 
-        // Firebase config with VAPID key
-        const firebaseConfig = {
-            apiKey: "AIzaSyCtjMyazrVnGFRASQOGjqeR_U9novXC15k",
-            authDomain: "anonymous-shadows.firebaseapp.com",
-            projectId: "anonymous-shadows",
-            storageBucket: "anonymous-shadows.firebasestorage.app",
-            messagingSenderId: "939891243370",
-            appId: "1:939891243370:web:8db01f36d0afa9a58b8d13",
-            vapidKey: "BPRhIQxTwlYR0K3pZD8QomSlZFBbZz4txXmbH-i0Q5oWaf54VTVjyZ4TqsfpBgac2IMOpeOY59DMb6lsoiMewSU"
-        };
+    <p id="speed">Your typing speed will appear here!</p>
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const messaging = getMessaging(app);
-
-        // Log user visit
-        async function logUserVisit() {
-            try {
-                await addDoc(collection(db, "userVisits"), {
-                    timestamp: serverTimestamp(),
-                    userAgent: navigator.userAgent,
-                    page: window.location.pathname
-                });
-            } catch (e) { console.error(e); }
-        }
-        logUserVisit();
-
-        // Initialize FCM
-        async function initializeFCM() {
-            try {
-                const permission = await Notification.requestPermission();
-                if (permission === "granted") {
-                    const token = await getToken(messaging, { vapidKey: firebaseConfig.vapidKey });
-                    console.log("FCM Token:", token);
-                    await addDoc(collection(db, "notificationTokens"), { token, timestamp: serverTimestamp() });
-                }
-            } catch (err) { console.error(err); }
-        }
-        initializeFCM();
-
-        // Typing tool logic
-        const textarea = document.getElementById("typingArea");
+    <script>
         const sentence = document.getElementById("sentence").innerText;
+        const textarea = document.getElementById("typingArea");
         const speedDisplay = document.getElementById("speed");
+        const button = document.getElementById("checkBtn");
+
         let startTime = null;
 
         textarea.addEventListener("input", () => {
             if (!startTime) startTime = new Date();
-            if (textarea.value === sentence) {
-                const endTime = new Date();
-                const timeDiff = (endTime - startTime) / 1000; // seconds
-                const words = sentence.split(" ").length;
-                const wpm = Math.round((words / timeDiff) * 60);
-                speedDisplay.innerText = "Your typing speed: " + wpm + " WPM";
+        });
 
-                // Save typing session
-                addDoc(collection(db, "typingSessions"), {
-                    timestamp: serverTimestamp(),
-                    speed: wpm,
-                    sentence: sentence
-                });
+        button.addEventListener("click", () => {
+            if (textarea.value.trim() !== sentence) {
+                speedDisplay.innerText = "Typed sentence does not match! Try again.";
+                speedDisplay.style.color = "#ff4444";
+                return;
             }
+
+            const endTime = new Date();
+            const timeDiff = (endTime - startTime) / 1000; // seconds
+            const words = sentence.split(" ").length;
+            const wpm = Math.round((words / timeDiff) * 60);
+            speedDisplay.innerText = `Your typing speed: ${wpm} WPM`;
+            speedDisplay.style.color = "#00ff99";
         });
     </script>
 </body>
