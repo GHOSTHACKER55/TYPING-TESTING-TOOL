@@ -17,7 +17,7 @@
     align-items: center;
     min-height: 100vh;
     background: #000;
-    color: #00aa00; /* dark neon green text */
+    color: #006600; /* very dark green */
   }
 
   canvas#matrix {
@@ -37,20 +37,15 @@
     position: relative;
   }
 
-  /* Main dark neon green glowing title */
+  /* Main title */
   h1#title {
     font-size: 48px;
-    color: #00aa00; /* dark neon green */
+    color: #006600; /* very dark green */
     text-align: center;
-    text-shadow:
-        0 0 5px #00aa00,
-        0 0 10px #00aa00,
-        0 0 20px #00cc00,
-        0 0 40px #00cc00,
-        0 0 80px #00cc00;
     margin: 20px 0 40px 0;
     z-index: 1;
     position: relative;
+    text-shadow: none; /* no glow */
   }
 
   .container {
@@ -63,14 +58,14 @@
     background: rgba(0,0,0,0.75);
     border-radius: 15px;
     padding: 20px;
-    box-shadow: 0 0 20px #00aa00;
+    box-shadow: 0 0 10px #006600; /* subtle dark green outline */
   }
 
   .sentence {
     font-size: 18px;
     margin-bottom: 15px;
     user-select: none;
-    color: #00aa00; /* dark neon green */
+    color: #006600; /* very dark green */
   }
 
   textarea {
@@ -81,7 +76,7 @@
     border: none;
     resize: none;
     background: #111;
-    color: #00aa00; /* dark neon green */
+    color: #006600; /* very dark green */
   }
 
   button {
@@ -95,10 +90,8 @@
     transition: 0.3s;
     width: 100%;
     background: #002200;
-    color: #00aa00; /* dark neon green */
-    text-shadow:
-        0 0 3px #00aa00,
-        0 0 5px #00aa00;
+    color: #006600; /* very dark green */
+    text-shadow: none;
   }
 
   #checkBtn:disabled {
@@ -111,14 +104,16 @@
     font-size: 20px;
     font-weight: bold;
     min-height: 28px;
-    color: #00aa00; /* dark neon green */
+    color: #006600; /* very dark green */
+    text-shadow: none;
   }
 
   .locked-msg {
     margin-top: 10px;
     font-size: 16px;
     text-align: center;
-    color: #00aa00; /* dark neon green */
+    color: #006600; /* very dark green */
+    text-shadow: none;
   }
 </style>
 </head>
