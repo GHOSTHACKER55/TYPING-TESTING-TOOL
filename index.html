@@ -55,14 +55,15 @@
     margin: 10px 0 0 0;
     font-weight: bold;
     transition: 0.3s;
-    width: 100%; /* Full width */
+    width: 100%;
   }
   #checkBtn {
     background: linear-gradient(45deg, #00ff99, #00cc77);
     color: #000;
   }
-  #checkBtn:hover {
-    background: linear-gradient(45deg, #00cc77, #009944);
+  #checkBtn:disabled {
+    background: #555;
+    cursor: not-allowed;
   }
   #whatsappGroup {
     background: #25D366;
@@ -85,6 +86,12 @@
     font-weight: bold;
     min-height: 28px;
   }
+  .locked-msg {
+    margin-top: 10px;
+    color: #ff4444;
+    font-size: 16px;
+    text-align: center;
+  }
 </style>
 </head>
 <body>
@@ -92,13 +99,14 @@
 <h1>Anonymous Shadows Typing Test</h1>
 
 <div class="container">
-  <div class="sentence" id="sentence"></div>
-  <textarea id="input" rows="4" placeholder="Start typing here..." onpaste="return false;"></textarea>
+  <div class="sentence" id="sentence">Join our WhatsApp to unlock the tool!</div>
+  <textarea id="input" rows="4" placeholder="Start typing here..." disabled></textarea>
   <br>
-  <button id="checkBtn">Check Accuracy & WPM</button>
-  <button id="whatsappGroup" onclick="window.open('https://chat.whatsapp.com/your-group-link', '_blank')">Join WhatsApp Group</button>
-  <button id="whatsappChannel" onclick="window.open('https://wa.me/your-channel-number', '_blank')">Visit WhatsApp Channel</button>
+  <button id="checkBtn" disabled>Check Accuracy & WPM</button>
+  <button id="whatsappGroup" onclick="unlockTool('group')">Join WhatsApp Group</button>
+  <button id="whatsappChannel" onclick="unlockTool('channel')">Visit WhatsApp Channel</button>
   <div class="result" id="result"></div>
+  <div class="locked-msg" id="lockedMsg">You must join WhatsApp before using the tool!</div>
 </div>
 
 <script>
@@ -121,7 +129,19 @@
     document.getElementById("input").value = "";
   }
 
-  newSentence();
+  function unlockTool(source) {
+    // Open WhatsApp link
+    if (source === 'group') {
+      window.open('https://chat.whatsapp.com/HVM9Spvm7HVGLERj8yo9kS', '_blank');
+    } else if (source === 'channel') {
+      window.open('https://whatsapp.com/channel/0029Vb6EE3S0LKZMNhNcoW22', '_blank');
+    }
+    // Enable typing tool
+    document.getElementById("input").disabled = false;
+    document.getElementById("checkBtn").disabled = false;
+    document.getElementById("lockedMsg").textContent = "Tool unlocked! Start typing below.";
+    newSentence();
+  }
 
   document.getElementById("checkBtn").addEventListener("click", () => {
     const input = document.getElementById("input").value;
@@ -132,7 +152,7 @@
     const accuracy = Math.round((correct / words1.length) * 100);
     const wpm = Math.round(words2.length); // Approximation
     document.getElementById("result").textContent = `Accuracy: ${accuracy}% | WPM: ${wpm}`;
-    newSentence(); // Load new sentence but keep the result visible
+    newSentence();
   });
 
   // Disable right-click copy
