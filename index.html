@@ -1,218 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anonymous Shadows Typing Test 🕶️🔥</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Roboto:wght@400;700&display=swap');
-
-        body {
-            margin: 0;
-            font-family: 'Roboto', sans-serif;
-            background-color: #0f0f0f;
-            color: #fff;
-            overflow-x: hidden;
-        }
-
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .header img {
-            width: 60px; /* Adjust size of your logo */
-            height: 60px;
-            margin-right: 15px;
-            border-radius: 10px;
-        }
-
-        h1 {
-            font-family: 'Orbitron', sans-serif;
-            color: #00ffea;
-            font-size: 2rem;
-            margin: 0;
-        }
-
-        p.description {
-            font-size: 1rem;
-            margin: 10px auto;
-            max-width: 800px;
-            line-height: 1.6;
-            text-align: center;
-            color: #ff4d6d;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 20px;
-            background: rgba(0,0,0,0.6);
-            border-radius: 15px;
-            box-shadow: 0 0 15px #00ffea;
-        }
-
-        .typing-area {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        textarea {
-            width: 90%;
-            max-width: 700px;
-            height: 120px;
-            font-size: 1.2rem;
-            border-radius: 10px;
-            border: none;
-            padding: 10px;
-            margin-top: 15px;
-            resize: none;
-            outline: none;
-            background-color: #111;
-            color: #fff;
-        }
-
-        .buttons {
-            margin-top: 15px;
-        }
-
-        button {
-            padding: 10px 25px;
-            margin: 5px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        button.start { background-color: #00ffea; color: #000; }
-        button.start:hover { background-color: #00d8cc; }
-
-        button.whatsapp { background-color: #25D366; color: #fff; }
-        button.whatsapp:hover { background-color: #1ebe5b; }
-
-        .stats {
-            margin-top: 10px;
-            font-size: 1.1rem;
-            color: #ffeb3b;
-        }
-
-        /* Falling red letters background */
-        #matrix-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            pointer-events: none;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Typing Test - Join First 🔐</title>
+<style>
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #0f0f0f;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 40px;
+}
+h1 {
+    font-family: 'Orbitron', sans-serif;
+    color: #00ffea;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+.button-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.button-group a, .button-group button {
+    display: block;
+    margin: 5px 0;
+    padding: 12px 25px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #000;
+    font-weight: bold;
+    background-color: #25D366; /* WhatsApp green */
+    transition: 0.3s;
+}
+.button-group a:hover, .button-group button:hover {
+    background-color: #1ebe57;
+}
+.sentence-box {
+    font-size: 1.2rem;
+    color: #ff4d6d;
+    background: rgba(0,0,0,0.6);
+    padding: 15px 20px;
+    border-radius: 12px;
+    max-width: 90%;
+    margin-bottom: 15px;
+    display: none; /* hidden until user joins */
+}
+input {
+    width: 90%;
+    max-width: 700px;
+    padding: 12px;
+    font-size: 1.2rem;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    background-color: #111;
+    color: #fff;
+    display: none; /* hidden until user joins */
+}
+.stats {
+    margin-top: 15px;
+    font-size: 1.2rem;
+    color: #ffeb3b;
+    display: none;
+}
+</style>
 </head>
 <body>
-    <canvas id="matrix-bg"></canvas>
+<h1>Typing Speed Test ⌨️🔥</h1>
 
-    <div class="header">
-        <img src="YOUR_IMAGE_URL_HERE" alt="Logo">
-        <h1>Anonymous Shadows Typing Test 🕶️🔥</h1>
-    </div>
+<div class="button-group">
+    <a href="https://chat.whatsapp.com/HVM9Spvm7HVGLERj8yo9kS" target="_blank">Join WhatsApp Group ✅</a>
+    <a href="https://whatsapp.com/channel/0029Vb6EE3S0LKZMNhNcoW22" target="_blank">Join WhatsApp Channel ✅</a>
+    <button id="confirmJoin">I Joined 🎉</button>
+</div>
 
-    <p class="description">
-        Welcome to the ultimate typing speed challenge! 🚀 Test your skills, improve your speed, and compete with friends! 🖤 To access the full tool, make sure to join our <strong>WhatsApp Group</strong> and <strong>Channel</strong> below! 🔥
-    </p>
+<div class="sentence-box" id="sentenceBox"></div>
+<input type="text" id="typingInput" placeholder="Start typing here...">
+<div class="stats" id="stats"></div>
 
-    <div class="container">
-        <div class="typing-area">
-            <textarea id="typingArea" placeholder="" readonly></textarea>
-            <div class="buttons">
-                <button class="start" id="startBtn">Start Typing Test ✍️</button>
-                <a href="https://whatsapp.com/channel/0029Vb6EE3S0LKZMNhNcoW22" target="_blank">
-                    <button class="whatsapp">Join WhatsApp Channel 📢</button>
-                </a>
-                <a href="https://chat.whatsapp.com/HVM9Spvm7HVGLERj8yo9kS" target="_blank">
-                    <button class="whatsapp">Join WhatsApp Group 💬</button>
-                </a>
-            </div>
-            <div class="stats">
-                <span id="accuracy">Accuracy: 0%</span> | <span id="wpm">Speed: 0 WPM</span>
-            </div>
-        </div>
-    </div>
+<script>
+const sentences = [
+    "How are you doing today?",
+    "Typing speed tests are fun and challenging!",
+    "Practice makes perfect in everything.",
+    "Anonymous Shadows is the ultimate tool!",
+    "Stay focused and keep improving your typing."
+];
 
-    <script>
-        // Matrix-style falling red letters
-        const canvas = document.getElementById('matrix-bg');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        const fontSize = 20;
-        const columns = canvas.width / fontSize;
-        const drops = Array(Math.floor(columns)).fill(1);
-        function drawMatrix() {
-            ctx.fillStyle = "rgba(0,0,0,0.1)";
-            ctx.fillRect(0,0,canvas.width,canvas.height);
-            ctx.fillStyle = "#ff0000";
-            ctx.font = fontSize + "px monospace";
-            for(let i=0; i<drops.length; i++){
-                const text = letters.charAt(Math.floor(Math.random()*letters.length));
-                ctx.fillText(text,i*fontSize,drops[i]*fontSize);
-                if(drops[i]*fontSize > canvas.height || Math.random() > 0.975) drops[i]=0;
-                drops[i]++;
-            }
-        }
-        setInterval(drawMatrix, 50);
+let currentSentence = "";
+let startTime;
 
-        // Typing test
-        const sentences = [
-            "How are you doing today?",
-            "The quick brown fox jumps over the lazy dog.",
-            "Anonymous Shadows is the ultimate typing challenge!",
-            "Practice makes perfect, keep typing fast!",
-            "Improve your speed and accuracy with every try."
-        ];
+const sentenceBox = document.getElementById("sentenceBox");
+const typingInput = document.getElementById("typingInput");
+const stats = document.getElementById("stats");
+const confirmJoin = document.getElementById("confirmJoin");
 
-        const typingArea = document.getElementById("typingArea");
-        const accuracyText = document.getElementById("accuracy");
-        const wpmText = document.getElementById("wpm");
-        const startBtn = document.getElementById("startBtn");
+confirmJoin.addEventListener("click", () => {
+    // Enable typing test
+    sentenceBox.style.display = "block";
+    typingInput.style.display = "block";
+    stats.style.display = "block";
+    document.querySelector(".button-group").style.display = "none";
+    loadSentence();
+    typingInput.focus();
+});
 
-        let startTime, totalTyped = 0;
-        let currentSentence = "";
+function loadSentence() {
+    currentSentence = sentences[Math.floor(Math.random() * sentences.length)];
+    sentenceBox.textContent = currentSentence;
+    typingInput.value = "";
+    startTime = new Date().getTime();
+}
 
-        function getRandomSentence() {
-            return sentences[Math.floor(Math.random()*sentences.length)];
-        }
-
-        startBtn.addEventListener("click", ()=>{
-            currentSentence = getRandomSentence();
-            typingArea.value = "";
-            typingArea.placeholder = currentSentence;
-            typingArea.removeAttribute("readonly");
-            typingArea.focus();
-            startTime = null;
-            accuracyText.innerText = "Accuracy: 0%";
-            wpmText.innerText = "Speed: 0 WPM";
-        });
-
-        typingArea.addEventListener("input", ()=>{
-            if(!startTime) startTime = new Date();
-            const value = typingArea.value;
-            totalTyped = value.length;
-
-            const correctChars = value.split("").filter((c,i)=> c === currentSentence[i]).length;
-            const accuracy = Math.floor((correctChars / (currentSentence.length || 1)) * 100);
-            accuracyText.innerText = "Accuracy: " + accuracy + "%";
-
-            const minutes = (new Date() - startTime)/60000;
-            const wpm = Math.floor(value.split(" ").length / minutes);
-            wpmText.innerText = "Speed: " + (wpm || 0) + " WPM";
-        });
-    </script>
+typingInput.addEventListener("input", () => {
+    const typed = typingInput.value;
+    const wordsTyped = typed.trim().split(/\s+/).length;
+    const elapsedTime = (new Date().getTime() - startTime) / 1000 / 60; // minutes
+    const wpm = Math.round(wordsTyped / elapsedTime);
+    let correctChars = 0;
+    for (let i = 0; i < typed.length; i++) {
+        if (typed[i] === currentSentence[i]) correctChars++;
+    }
+    const accuracy = Math.round((correctChars / currentSentence.length) * 100);
+    stats.textContent = `WPM: ${wpm} | Accuracy: ${accuracy}%`;
+    if (typed === currentSentence) {
+        setTimeout(loadSentence, 500); // load next sentence automatically
+    }
+});
+</script>
 </body>
 </html>
