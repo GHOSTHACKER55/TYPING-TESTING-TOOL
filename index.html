@@ -5,18 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Anonymous Shadows Typing Test ⌨️🔥</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Roboto:wght@400;700&display=swap');
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Roboto:wght@400;700&family=Press+Start+2P&family=Comfortaa:wght@400;700&display=swap');
 
-/* Background Falling Letters */
-body {
+/* Reset */
+body, html {
     margin: 0;
     padding: 0;
     font-family: 'Roboto', sans-serif;
     background-color: #0f0f0f;
-    overflow: hidden;
     color: #fff;
+    overflow: hidden;
 }
 
+/* Canvas for falling letters */
 #lettersCanvas {
     position: fixed;
     top: 0;
@@ -24,96 +26,117 @@ body {
     z-index: 0;
 }
 
-/* Container for tool */
+/* Container */
 .container {
     position: relative;
     z-index: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
     min-height: 100vh;
-    padding-top: 50px;
+    padding: 30px 15px;
 }
 
+/* Logo placeholder */
+#logoPlaceholder {
+    width: 60px;
+    height: 60px;
+    background-color: #222;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 15px;
+}
+
+/* Title */
 h1 {
     font-family: 'Orbitron', sans-serif;
     color: #00ffea;
     font-size: 2rem;
     display: flex;
     align-items: center;
+    margin-bottom: 10px;
     gap: 15px;
-    margin-bottom: 20px;
+    text-shadow: 0 0 10px #00ffea;
 }
 
-/* Space for user image */
-#userImage {
-    width: 50px;
-    height: 50px;
-    background-color: #222;
-    border-radius: 50%;
-    display: inline-block;
-}
-
-/* Sentence Box */
-#sentenceBox {
-    font-size: 1.2rem;
+/* Message */
+#joinMessage {
+    font-family: 'Press Start 2P', cursive;
     color: #ff4d6d;
-    background: rgba(0,0,0,0.6);
-    padding: 15px 20px;
-    border-radius: 12px;
-    max-width: 90%;
-    margin-bottom: 15px;
-    user-select: none; /* not copyable */
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    text-shadow: 0 0 5px #ff4d6d;
 }
 
-/* Input Box */
+/* Sentence box */
+#sentenceBox {
+    font-family: 'Comfortaa', cursive;
+    font-size: 1.3rem;
+    color: #ff4d6d;
+    background: rgba(0,0,0,0.7);
+    padding: 20px 25px;
+    border-radius: 15px;
+    max-width: 95%;
+    margin-bottom: 15px;
+    user-select: none; /* prevent copy */
+    text-align: center;
+}
+
+/* Input box */
 #typingArea {
-    width: 90%;
-    max-width: 700px;
-    padding: 12px;
+    width: 95%;
+    max-width: 750px;
+    padding: 15px;
     font-size: 1.2rem;
-    border-radius: 10px;
+    border-radius: 12px;
     border: none;
     outline: none;
     background-color: #111;
     color: #fff;
+    text-align: center;
 }
 
 /* Stats */
 .stats {
     margin-top: 15px;
     font-size: 1.2rem;
+    font-weight: bold;
     color: #ffeb3b;
+    text-shadow: 0 0 5px #ffeb3b;
 }
 
 /* Buttons */
 .button {
-    margin-top: 15px;
-    padding: 12px 30px;
-    border-radius: 8px;
+    margin-top: 20px;
+    padding: 18px 50px;
+    border-radius: 12px;
     border: none;
     cursor: pointer;
     font-size: 1rem;
     font-weight: bold;
     color: #fff;
     transition: 0.3s;
+    text-transform: uppercase;
 }
 
+/* WhatsApp Group button */
 #whatsappGroup {
-    background-color: #25D366;
-    margin-right: 10px;
+    background: linear-gradient(45deg, #25D366, #1ebe5b, #00ff99);
+    margin-right: 15px;
 }
 
+/* WhatsApp Channel button */
 #whatsappChannel {
-    background-color: #128C7E;
+    background: linear-gradient(45deg, #128C7E, #0fa48f, #00cccc);
 }
 
 /* Responsive */
 @media(max-width: 600px){
     h1 { font-size: 1.5rem; }
-    #sentenceBox { font-size: 1rem; }
-    #typingArea { font-size: 1rem; }
+    #sentenceBox { font-size: 1rem; padding: 15px; }
+    #typingArea { font-size: 1rem; padding: 12px; }
+    .button { padding: 15px 35px; font-size: 0.9rem; }
 }
 </style>
 </head>
@@ -122,9 +145,11 @@ h1 {
 
 <div class="container">
     <h1>
-        <div id="userImage"></div>
+        <div id="logoPlaceholder"></div>
         Anonymous Shadows Typing Test ⌨️🔥
     </h1>
+
+    <div id="joinMessage">⚠️ You must join WhatsApp Group & Channel to start typing! ⚠️</div>
 
     <div id="sentenceBox"></div>
     <input type="text" id="typingArea" placeholder="Type here..." autocomplete="off">
@@ -146,7 +171,7 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-const fontSize = 20;
+const fontSize = 22;
 const columns = Math.floor(canvas.width / fontSize);
 const drops = Array(columns).fill(1);
 
@@ -163,7 +188,6 @@ function draw() {
         drops[i]++;
     }
 }
-
 setInterval(draw, 50);
 window.addEventListener('resize', ()=>{canvas.width=window.innerWidth; canvas.height=window.innerHeight;});
 
@@ -205,7 +229,6 @@ typingArea.addEventListener("input", ()=>{
     wpmText.innerText = "Speed: " + (wpm || 0) + " WPM";
 
     if(value === currentSentence){
-        // Move to next sentence automatically
         typingArea.value = "";
         currentSentence = sentences[Math.floor(Math.random()*sentences.length)];
         sentenceBox.innerText = currentSentence;
@@ -221,7 +244,7 @@ document.getElementById("whatsappChannel").onclick = ()=>{
     window.open("https://whatsapp.com/channel/0029Vb6EE3S0LKZMNhNcoW22","_blank");
 };
 
-// Make tool unusable until joined (simple requirement)
+// Make tool unusable until joined
 let joinedGroup = false;
 let joinedChannel = false;
 
@@ -231,6 +254,7 @@ document.getElementById("whatsappChannel").addEventListener("click", ()=>{joined
 function checkJoined(){
     if(joinedGroup && joinedChannel){
         typingArea.disabled = false;
+        document.getElementById("joinMessage").innerText = "✅ You can now start typing!";
     } else {
         typingArea.disabled = true;
     }
