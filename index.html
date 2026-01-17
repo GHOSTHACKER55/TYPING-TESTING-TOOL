@@ -24,9 +24,9 @@
     text-shadow: 0 0 8px #00ff99;
   }
   .container {
-    width: 90%;
+    width: 95%;
     max-width: 500px;
-    background: rgba(0,0,0,0.7);
+    background: rgba(0,0,0,0.75);
     border-radius: 15px;
     padding: 20px;
     box-shadow: 0 0 20px #00ff99;
@@ -47,14 +47,15 @@
     color: #00ffcc;
   }
   button {
-    padding: 12px 20px;
-    font-size: 16px;
+    padding: 14px 0;
+    font-size: 18px;
     border-radius: 10px;
     border: none;
     cursor: pointer;
-    margin: 10px 5px 0 0;
+    margin: 10px 0 0 0;
     font-weight: bold;
     transition: 0.3s;
+    width: 100%; /* Full width */
   }
   #checkBtn {
     background: linear-gradient(45deg, #00ff99, #00cc77);
@@ -79,9 +80,10 @@
   }
   .result {
     margin-top: 15px;
-    font-size: 18px;
+    font-size: 20px;
     color: #ffdd00;
     font-weight: bold;
+    min-height: 28px;
   }
 </style>
 </head>
@@ -93,7 +95,7 @@
   <div class="sentence" id="sentence"></div>
   <textarea id="input" rows="4" placeholder="Start typing here..." onpaste="return false;"></textarea>
   <br>
-  <button id="checkBtn">Check Accuracy</button>
+  <button id="checkBtn">Check Accuracy & WPM</button>
   <button id="whatsappGroup" onclick="window.open('https://chat.whatsapp.com/your-group-link', '_blank')">Join WhatsApp Group</button>
   <button id="whatsappChannel" onclick="window.open('https://wa.me/your-channel-number', '_blank')">Visit WhatsApp Channel</button>
   <div class="result" id="result"></div>
@@ -117,7 +119,6 @@
     currentSentence = sentences[Math.floor(Math.random() * sentences.length)];
     document.getElementById("sentence").textContent = currentSentence;
     document.getElementById("input").value = "";
-    document.getElementById("result").textContent = "";
   }
 
   newSentence();
@@ -131,7 +132,7 @@
     const accuracy = Math.round((correct / words1.length) * 100);
     const wpm = Math.round(words2.length); // Approximation
     document.getElementById("result").textContent = `Accuracy: ${accuracy}% | WPM: ${wpm}`;
-    setTimeout(newSentence, 2000);
+    newSentence(); // Load new sentence but keep the result visible
   });
 
   // Disable right-click copy
